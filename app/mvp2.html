@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="RASTRE.IA: camada de inteligência artificial do Recife Monitora. Alertas de priorização, recomendações com fonte, resumo do quadrimestre e assistente interno. Dados sintéticos.">
+<style>
+:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img{max-width:100%}[hidden]{display:none!important}
+</style>
+<title>RASTRE.IA</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap">
+<style>
+:root{
+  --bg:#EEEEF1;--surface:#FFFFFF;--surface-2:#F3F4FB;--line:#DADDED;--ink:#1D2040;--ink-2:#4A4F70;--muted:#7D82A2;
+  --accent:#5B7CFA;--accent-ink:#FFFFFF;--accent-soft:#E3E9FE;--navy:#2D2FA6;--lav:#C7D0FA;--dots:#B9B7F0;--mint:#B7E0DB;
+  --good:#2C7A4B;--good-soft:#DFF1E5;--warn:#9A6B00;--warn-soft:#FBEFC8;--serious:#B5461A;--serious-soft:#FCE3D6;--crit:#A11D2B;--crit-soft:#F9DADD;
+  --bar:#5B7CFA;--bar-track:#E3E6F5;--shadow:0 1px 2px rgba(29,32,64,.05),0 6px 18px rgba(91,124,250,.08);
+  --r:14px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){color-scheme:dark;
+  --bg:#141626;--surface:#1B1E33;--surface-2:#232741;--line:#31365A;--ink:#ECEEFA;--ink-2:#B9BDD8;--muted:#8388AA;
+  --accent:#8FA6FF;--accent-ink:#10122A;--accent-soft:#262F5C;--navy:#8FA6FF;--lav:#2C3465;--dots:#3C4478;--mint:#2E4A4C;
+  --good:#6CC28E;--good-soft:#173826;--warn:#E5B54A;--warn-soft:#3A2E0E;--serious:#F08A5C;--serious-soft:#42210F;--crit:#F07785;--crit-soft:#44161C;
+  --bar:#8FA6FF;--bar-track:#2A2F50;--shadow:none}}
+:root[data-theme="dark"]{color-scheme:dark;
+  --bg:#141626;--surface:#1B1E33;--surface-2:#232741;--line:#31365A;--ink:#ECEEFA;--ink-2:#B9BDD8;--muted:#8388AA;
+  --accent:#8FA6FF;--accent-ink:#10122A;--accent-soft:#262F5C;--navy:#8FA6FF;--lav:#2C3465;--dots:#3C4478;--mint:#2E4A4C;
+  --good:#6CC28E;--good-soft:#173826;--warn:#E5B54A;--warn-soft:#3A2E0E;--serious:#F08A5C;--serious-soft:#42210F;--crit:#F07785;--crit-soft:#44161C;
+  --bar:#8FA6FF;--bar-track:#2A2F50;--shadow:none}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:14.5px/1.55 "Inter","Poppins",system-ui,-apple-system,Segoe UI,sans-serif}
+h1,h2,h3,h4{font-family:"Poppins","Inter",system-ui,sans-serif;margin:0;text-wrap:balance}
+h1{font-size:30px;font-weight:300;color:var(--accent);line-height:1.1;letter-spacing:-.01em}h2{font-size:16px;font-weight:600;letter-spacing:-.005em}h3{font-size:14px;font-weight:600}
+p{margin:0}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"Poppins",sans-serif;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+
+/* shell */
+.proto-banner{background:var(--accent);color:var(--accent-ink);font-size:12.5px;padding:6px 16px;text-align:center}
+.band{height:10px;background:var(--accent)}
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:calc(100% - 10px)}
+.side{background:var(--surface);border-right:1px solid var(--line);padding:22px 16px 18px;display:flex;flex-direction:column;gap:22px;position:sticky;top:env(safe-area-inset-top,0px);height:100vh;overflow:auto}
+.side::after{content:"";position:absolute;left:14px;bottom:200px;width:120px;height:90px;background-image:radial-gradient(var(--dots) 1.6px,transparent 1.8px);background-size:20px 20px;pointer-events:none;opacity:.9}
+@media (max-width:820px){.side{position:fixed}}
+.brand{padding:0 6px}
+.wordmark{font-family:"Poppins",sans-serif;font-size:22px;line-height:1;color:var(--accent);letter-spacing:-.01em}
+.wordmark b{font-weight:700}.wordmark span{font-weight:300}
+.brand small{display:block;color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-top:6px;font-family:Poppins;font-weight:500}
+.nav{display:flex;flex-direction:column;gap:2px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border-radius:10px;color:var(--ink-2);font-weight:500;font-family:Poppins;font-size:13.5px}
+.nav button:hover{background:var(--surface-2)}
+.nav button.on{background:var(--accent);color:var(--accent-ink);font-weight:500}
+.nav svg{width:18px;height:18px;flex:none}
+.nav .cnt{margin-left:auto;background:var(--crit);color:#fff;font-size:11px;font-weight:600;border-radius:999px;padding:1px 7px}
+.profile{margin-top:auto;border-top:1px solid var(--line);padding-top:14px}
+.profile label{display:block;font-size:11px;color:var(--muted);margin-bottom:6px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.profile select{width:100%;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+.profile .who{display:flex;gap:10px;align-items:center;margin-top:10px}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--lav);border:2px solid var(--accent);display:grid;place-items:center;font-weight:600;font-size:12px;color:var(--ink-2)}
+.who small{display:block;color:var(--muted);font-size:12px}
+.main{padding:22px 28px 60px;min-width:0}
+.topbar{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;justify-content:space-between;margin-bottom:20px}
+.topbar .sub{color:var(--ink-2);font-size:11px;margin-bottom:4px;font-family:Poppins;font-weight:500;letter-spacing:.18em;text-transform:uppercase}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);padding:6px 12px;border-radius:999px;font-size:12.5px;color:var(--ink-2);font-family:Poppins;font-weight:500}
+.chip.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.menu-btn{display:none}
+
+/* cards & tiles */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:18px}
+.tile{padding:16px 18px}
+.tile .v{font-family:Poppins;font-size:30px;font-weight:500;line-height:1.1;margin:6px 0 2px;color:var(--navy)}
+.tile .d{font-size:12.5px;color:var(--ink-2)}
+.delta{font-weight:600}.delta.up{color:var(--good)}.delta.down{color:var(--crit)}.delta.flat{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:16px}
+@media (max-width:980px){.grid2{grid-template-columns:1fr}}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:16px 18px 10px}
+.sec-h .more{color:var(--accent);font-weight:600;font-size:13px}
+
+/* semaforo grid */
+.teams{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;padding:0 16px 16px}
+.team{border:1px solid var(--line);border-radius:12px;padding:12px 12px 10px;text-align:left;background:var(--surface);display:flex;flex-direction:column;gap:6px;position:relative;transition:transform .12s}
+.team:hover{transform:translateY(-1px);border-color:var(--accent)}
+.team .nm{font-weight:600;font-size:13.5px;line-height:1.25}
+.team .usf{color:var(--muted);font-size:12px}
+.team .sc{display:flex;align-items:baseline;gap:8px;margin-top:2px}
+.team .sc b{font-family:Poppins;font-size:20px;font-weight:600}
+.zone{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.zone::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.z-exc,.z-qua{background:var(--good-soft);color:var(--good)}
+.z-ape{background:var(--warn-soft);color:var(--warn)}
+.z-cri{background:var(--serious-soft);color:var(--serious)}
+.z-ins{background:var(--crit-soft);color:var(--crit)}
+.team .flag{position:absolute;top:10px;right:10px;width:8px;height:8px;border-radius:50%}
+.spark{width:100%;height:28px;display:block}
+
+/* alerts */
+.alerts{display:flex;flex-direction:column}
+.alert{display:grid;grid-template-columns:6px 1fr auto;gap:14px;padding:14px 16px;border-top:1px solid var(--line);align-items:start}
+.alert:first-child{border-top:0}
+.alert .stripe{border-radius:3px;height:100%;min-height:44px}
+.sev{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px}
+.sev-crit{background:var(--crit-soft);color:var(--crit)}.sev-alto{background:var(--serious-soft);color:var(--serious)}.sev-aten{background:var(--warn-soft);color:var(--warn)}
+.alert .t{font-weight:600;margin:4px 0 2px}
+.alert .w{color:var(--ink-2);font-size:13.5px}
+.alert .act{display:flex;gap:6px;flex-direction:column;align-items:stretch}
+.btn{border:1px solid var(--line);background:var(--surface);padding:7px 14px;border-radius:999px;font-weight:500;font-size:13px;white-space:nowrap;font-family:Poppins}
+.btn:hover{background:var(--surface-2)}
+.btn.pri{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.pri:hover{filter:brightness(1.05)}
+.btn.sm{padding:5px 10px;font-size:12.5px}
+.alert.done{opacity:.55}.alert.done .act,.alert.snoozed .act{opacity:1}.alert.done .t::after{content:" · tratado";color:var(--good)}
+.alert.snoozed{opacity:.55}.alert.snoozed .t::after{content:" · adiado 7 dias";color:var(--muted)}
+
+/* detail */
+.back{color:var(--accent);font-weight:600;font-size:13px;display:inline-flex;gap:6px;align-items:center;margin-bottom:10px}
+.detail{display:grid;grid-template-columns:1.1fr 1fr;gap:16px}
+@media (max-width:980px){.detail{grid-template-columns:1fr}}
+.axes{padding:16px;display:flex;flex-direction:column;gap:14px}
+.axis .lbl{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.axis .lbl b{font-weight:600}
+.bar{height:10px;border-radius:4px;background:var(--bar-track);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bar);border-radius:4px}
+.sub-bars{margin:8px 0 0 0;display:grid;grid-template-columns:1fr;gap:5px}
+.sub{display:grid;grid-template-columns:1fr 90px 46px;gap:10px;align-items:center;font-size:12.5px;color:var(--ink-2)}
+.sub .bar{height:6px}
+.sub.low{color:var(--serious)}.sub.low .bar i{background:var(--serious)}
+.trend{padding:16px}
+.trend svg{width:100%;height:150px;display:block}
+.recs{display:flex;flex-direction:column}
+.rec{padding:14px 16px;border-top:1px solid var(--line);display:grid;grid-template-columns:28px 1fr;gap:12px}
+.rec:first-child{border-top:0}
+.rec .n{width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:700;font-size:12.5px;font-family:Poppins}
+.rec .t{font-weight:600}
+.rec .w{color:var(--ink-2);font-size:13.5px;margin:2px 0 6px}
+.src{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--navy);background:var(--accent-soft);padding:2px 9px;border-radius:999px;margin-right:6px;margin-bottom:4px}
+.src::before{content:"§";font-weight:700}
+.gain{font-size:12px;color:var(--muted)}
+.ai-note{font-size:12px;color:var(--muted);padding:10px 16px;border-top:1px dashed var(--line);display:flex;gap:6px;align-items:center}
+
+/* timeline */
+.tl{display:flex;justify-content:space-between;padding:12px 16px 16px;position:relative;font-size:12px;color:var(--ink-2)}
+.tl::before{content:"";position:absolute;left:24px;right:24px;top:22px;height:2px;background:var(--line)}
+.tl div{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;text-align:center;width:22%}
+.tl i{width:12px;height:12px;border-radius:50%;background:var(--surface);border:2px solid var(--line)}
+.tl .done i{background:var(--accent);border-color:var(--accent)}
+.tl .now i{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.tl .now{color:var(--accent);font-weight:600}
+
+/* report */
+.report{max-width:860px;padding:32px 36px}
+.report .hd{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;border-bottom:2px solid var(--accent);padding-bottom:14px;margin-bottom:18px}
+.report h2{font-size:24px;font-weight:300;color:var(--accent)}
+.report h3{margin:18px 0 8px;font-size:14px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
+.report p,.report li{max-width:70ch}
+.report ul{margin:0;padding-left:18px}
+.report .kv{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:700px){.report .kv{grid-template-columns:1fr 1fr}.report{padding:20px}}
+.report .kv div{background:var(--accent-soft);border-radius:8px;padding:10px 12px}
+.report .kv b{display:block;font-family:Poppins;font-size:20px}
+.report .kv span{font-size:12px;color:var(--ink-2)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-weight:500;color:var(--accent-ink);background:var(--accent);font-family:Poppins;font-size:12px;letter-spacing:.04em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:9px 10px;border-bottom:1px solid var(--line)}
+.tbl-wrap{overflow-x:auto}
+tr.click{cursor:pointer}tr.click:hover td{background:var(--surface-2)}
+
+/* district bars (central) */
+.dist{padding:8px 16px 16px;display:flex;flex-direction:column;gap:8px}
+.drow{display:grid;grid-template-columns:120px 1fr 56px;gap:12px;align-items:center;font-size:13px;cursor:pointer;padding:4px 6px;border-radius:6px}
+.drow:hover{background:var(--surface-2)}
+.drow .bar{height:14px}
+.drow .cr{font-size:11.5px;color:var(--muted)}
+
+/* chat */
+.chat{display:grid;grid-template-rows:1fr auto;height:min(72vh,720px);min-height:460px}
+.msgs{padding:18px;overflow:auto;display:flex;flex-direction:column;gap:14px}
+.msg{max-width:78%;padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.5}
+.msg.u{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
+.msg.b{background:var(--surface-2)}
+.msg.b{align-self:flex-start;background:var(--surface-2);border-bottom-left-radius:4px}
+.msg.b .srcs{margin-top:8px;display:flex;flex-wrap:wrap}
+.msg.b ul{margin:6px 0 0;padding-left:18px}
+.msg.b .scope{font-size:11.5px;color:var(--muted);margin-top:6px}
+.typing{align-self:flex-start;color:var(--muted);font-size:13px;padding:4px 14px}
+.composer{border-top:1px solid var(--line);padding:12px 14px;display:flex;flex-direction:column;gap:10px}
+.quick{display:flex;gap:6px;flex-wrap:wrap}
+.quick button{border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:12.5px;color:var(--ink-2);background:var(--surface)}
+.quick button:hover{border-color:var(--accent);color:var(--accent)}
+.composer form{display:flex;gap:8px}
+.composer input{flex:1;padding:10px 12px;border-radius:9px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit}
+.privacy{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center}
+
+/* configurações */
+.settings{max-width:720px;display:flex;flex-direction:column;gap:16px}
+.setting{padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.setting .t{font-weight:600}.setting .w{color:var(--ink-2);font-size:13.5px;margin-top:2px;max-width:46ch}
+.seg{display:inline-flex;background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:3px;gap:2px}
+.seg button{padding:7px 14px;border-radius:999px;font-size:13px;font-weight:500;color:var(--ink-2);font-family:Poppins;display:inline-flex;gap:6px;align-items:center}
+.seg button svg{width:15px;height:15px}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+.switch{width:42px;height:24px;border-radius:999px;background:var(--line);position:relative;transition:.15s;flex:none}
+.switch::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:var(--surface);transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.switch.on{background:var(--accent)}.switch.on::after{left:21px}
+@media (max-width:600px){.setting{grid-template-columns:1fr}}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:9px;font-size:13.5px;opacity:0;transition:.2s;pointer-events:none;box-shadow:var(--shadow);z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%);pointer-events:auto}
+.toast-undo{margin-left:14px;color:var(--accent);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.empty{padding:28px 16px;color:var(--muted);text-align:center}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+@media (max-width:820px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;z-index:10;width:260px;transform:translateX(-100%);transition:.2s;height:100%}
+  h1{font-size:24px}
+  .side.open{transform:none}
+  .menu-btn{display:inline-flex;align-items:center;gap:8px}
+  .main{padding:16px 16px 60px}
+  .alert{grid-template-columns:6px 1fr}.alert .act{grid-column:2;flex-direction:row}
+  .drow{grid-template-columns:90px 1fr 48px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head><body>
+
+<div class="band"></div>
+<div class="shell">
+  <aside class="side" id="side">
+    <div class="brand"><div class="wordmark"><b>RASTRE</b><span>.IA</span></div><small>Recife Monitora · IA</small></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="profile">
+      <label for="profile">Perfil de acesso</label>
+      <select id="profile">
+        <option value="distrital">Distrital · DS IV</option>
+        <option value="local">Local · USF Alto do Mandu</option>
+        <option value="central">Central · NIIMA/SEAB</option>
+      </select>
+      <div class="who"><div class="avatar" id="who-av">AL</div><div><strong id="who-n">Ana Lúcia</strong><small id="who-r">Gestora do Distrito Sanitário IV</small></div></div>
+    </div>
+  </aside>
+  <main class="main" id="main"></main>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+/* ---------- dados sintéticos ---------- */
+const CYCLES=["2025.1","2025.2","2025.3","2026.1","2026.2"];
+const CUR=4;
+const DISTRICTS=["DS I","DS II","DS III","DS IV","DS V","DS VI","DS VII","DS VIII"];
+const ZONES=[["Excelência","z-exc",900],["Qualidade","z-qua",800],["Aperfeiçoamento","z-ape",600],["Crítica","z-cri",400],["Insuficiente","z-ins",0]];
+function zone(s){for(const z of ZONES){if(s>=z[2])return{name:z[0],cls:z[1]}}return{name:"Insuficiente",cls:"z-ins"}}
+let seed=17;function rnd(){seed=(seed*9301+49297)%233280;return seed/233280}
+function ri(a,b){return Math.round(a+rnd()*(b-a))}
+const USF_NAMES={"DS I":["Santo Amaro","Coelhos","Ilha Joana Bezerra","Boa Vista","Coque","São José"],"DS II":["Água Fria","Campina do Barreto","Fundão","Beberibe","Arruda","Cajueiro"],"DS III":["Nova Descoberta","Vasco da Gama","Macaxeira","Córrego do Jenipapo","Alto José do Pinho","Passarinho"],"DS IV":["Alto do Mandu","Casa Amarela","Várzea","Iputinga","Cordeiro","Engenho do Meio","Torrões","Caxangá"],"DS V":["Afogados","Mangueira","Mustardinha","Jardim São Paulo","Estância","Bongi"],"DS VI":["Ibura","Jordão","Cohab","Imbiribeira","Pina","Brasília Teimosa"],"DS VII":["Guabiraba","Pau Ferro","Passarinho II","Brejo da Guabiraba","Macaxeira II","Sítio dos Pintos"],"DS VIII":["Ibura de Baixo","Lagoa Encantada","UR-10","Três Carneiros","Monte Verde","Jordão Baixo"]};
+const TYPES=["eSF","eSF","eSB","eMulti"];
+const E2_ATTR=[["Acesso",40],["Longitudinalidade",40],["Integralidade",40],["Acolhimento",20],["Coordenação do cuidado",20],["Satisfação geral",40]];
+const E3_IND=[["Gestantes com 6 consultas de pré-natal",75],["Gestantes com exames de sífilis e HIV",75],["Gestantes com atendimento odontológico",75],["Citopatológico em dia (25 a 64 anos)",75],["Vacinação infantil (polio e penta)",75],["Hipertensos com PA aferida no semestre",75],["Diabéticos com HbA1c solicitada",75],["Cobertura de primeira consulta odontológica",75]];
+const teams=[];let id=1;
+for(const d of DISTRICTS){const usfs=USF_NAMES[d];usfs.forEach((u,i)=>{const n=i<2?2:1;for(let k=0;k<n;k++){const type=TYPES[(i+k)%4];
+  const base=ri(520,900);const hist=[];let s=base;for(let c=0;c<5;c++){s=Math.max(300,Math.min(980,s+ri(-60,60)));hist.push(s)}
+  teams.push({id:id++,name:`${type} ${u}${n>1?" "+["I","II"][k]:""}`,usf:`USF ${u}`,district:d,type,hist,prof:ri(8,80),vuln:rnd()<.35});}})}
+/* equipes com história definida no DS IV */
+function setTeam(name,hist,vuln){const t=teams.find(x=>x.name===name);if(t){t.hist=hist;t.vuln=vuln}}
+setTeam("eSF Alto do Mandu I",[742,761,738,703,548],true);
+setTeam("eSF Alto do Mandu II",[812,826,798,771,712],true);
+setTeam("eSF Casa Amarela I",[688,701,712,726,745],false);
+setTeam("eSB Casa Amarela II",[655,640,598,571,552],true);
+setTeam("eSB Várzea",[905,912,908,918,921],false);
+setTeam("eMulti Iputinga",[834,841,822,783,705],false);
+setTeam("eSF Cordeiro",[771,784,796,811,842],false);
+setTeam("eSF Engenho do Meio",[602,618,625,611,589],true);
+setTeam("eSB Torrões",[498,515,502,489,462],true);
+setTeam("eMulti Caxangá",[858,871,866,874,880],false);
+const LOCAL_USF="USF Alto do Mandu";
+/* decomposição por eixo derivada da pontuação total */
+function breakdown(t){seed=t.id*7+3;const tot=t.hist[CUR],prev=t.hist[CUR-1];
+  const e1=Math.round(tot*.2*(0.85+rnd()*.3)),e2=Math.round(tot*.2*(0.8+rnd()*.35));let e3=tot-e1-e2;
+  const c1=Math.min(200,Math.max(40,e1)),c2=Math.min(200,Math.max(30,e2));e3=Math.min(600,Math.max(120,tot-c1-c2));
+  const blocks=[["Bloco A · Relações de trabalho",40],["Bloco B · Ações e processos",80],["Bloco C · Estrutura da AB",80]].map(([n,m])=>({n,m,v:Math.round(m*(c1/200)*(0.75+rnd()*.5))}));
+  const attrs=E2_ATTR.map(([n,m])=>({n,m,v:Math.round(m*(c2/200)*(0.7+rnd()*.55))}));
+  const inds=E3_IND.map(([n,m])=>({n,m,v:Math.round(m*(e3/600)*(0.65+rnd()*.6))}));
+  const fix=(arr,target)=>{const s=arr.reduce((a,b)=>a+b.v,0);arr.forEach(x=>x.v=Math.min(x.m,Math.max(0,Math.round(x.v*target/s))))};
+  fix(blocks,c1);fix(attrs,c2);fix(inds,e3);
+  const nps=Math.round((c2/200)*150-50);
+  return{e1:c1,e2:c2,e3,blocks,attrs,inds,nps,delta:tot-prev}}
+/* recomendações por equipe, com fonte */
+function recs(t){const b=breakdown(t);const out=[];
+  const worstInd=[...b.inds].sort((x,y)=>x.v/x.m-y.v/y.m).slice(0,2);
+  const worstAttr=[...b.attrs].sort((x,y)=>x.v/x.m-y.v/y.m)[0];
+  const worstBlock=[...b.blocks].sort((x,y)=>x.v/x.m-y.v/y.m)[0];
+  const ACT={"Gestantes com 6 consultas de pré-natal":"Fazer busca ativa das gestantes com menos de 6 consultas registradas e agendar consultas em bloco nas próximas 3 semanas, priorizando gestantes no terceiro trimestre.",
+    "Gestantes com exames de sífilis e HIV":"Revisar no prontuário eletrônico as gestantes sem registro dos testes rápidos e ofertar coleta na próxima consulta, com registro imediato no e-SUS.",
+    "Gestantes com atendimento odontológico":"Vincular a agenda da eSB ao pré-natal: toda gestante cadastrada sai da primeira consulta com atendimento odontológico marcado.",
+    "Citopatológico em dia (25 a 64 anos)":"Organizar mutirão de coleta em horário estendido e usar a lista nominal de mulheres de 25 a 64 anos sem exame nos últimos 3 anos.",
+    "Vacinação infantil (polio e penta)":"Cruzar cadastro de crianças menores de 1 ano com o cartão de vacinas e acionar ACS para busca ativa das doses em atraso.",
+    "Hipertensos com PA aferida no semestre":"Aferir PA em todo contato do hipertenso com a unidade (farmácia, acolhimento, visita) e registrar no e-SUS, não só na consulta médica.",
+    "Diabéticos com HbA1c solicitada":"Solicitar HbA1c no acolhimento dos diabéticos sem exame nos últimos 6 meses, usando a lista nominal do e-SUS.",
+    "Cobertura de primeira consulta odontológica":"Abrir vagas de primeira consulta odontológica programática por microárea, com convite ativo dos ACS."};
+  worstInd.forEach(i=>out.push({t:`Recuperar o indicador "${i.n}"`,w:ACT[i.n],src:["Manual de Avaliação de Qualidade, Eixo 3, Anexo 2 (método de cálculo)","Indicador MS, meta 100%"],gain:`Pontos perdidos neste ciclo: ${i.m-i.v} de ${i.m}`}));
+  const ATTR_ACT={"Acesso":"Revisar o agendamento: reservar parte da agenda para demanda espontânea e informar os horários de acolhimento no mural e no WhatsApp da unidade.",
+    "Longitudinalidade":"Reduzir a rotatividade de profissional por microárea e garantir que o usuário seja atendido preferencialmente pela mesma equipe.",
+    "Integralidade":"Ampliar a oferta de procedimentos na própria unidade e explicar ao usuário, ao final da consulta, os próximos passos do cuidado.",
+    "Acolhimento":"Padronizar a escuta inicial com classificação de prioridade e retorno ao usuário em até 30 minutos sobre o encaminhamento.",
+    "Coordenação do cuidado":"Registrar e acompanhar os encaminhamentos para especialidades, com retorno ativo ao usuário sobre o agendamento.",
+    "Satisfação geral":"Discutir com a equipe os comentários dos usuários do ciclo e comunicar no mural as melhorias adotadas a partir deles."};
+  out.push({t:`Melhorar a percepção do usuário em "${worstAttr.n}"`,w:ATTR_ACT[worstAttr.n],src:["Manual de Avaliação de Qualidade, Eixo 2, Quadro 7 (conversão NPS para pontos da ASU)"],gain:`Atributo com peso ${worstAttr.m===40?"2":"1"}; NPS atual da equipe: ${b.nps}`});
+  const BLOCK_ACT={"Bloco A · Relações de trabalho":"Realizar reunião de equipe quinzenal com pauta fixa de processo de trabalho e registro de encaminhamentos, conforme as perguntas do Bloco A.",
+    "Bloco B · Ações e processos":"Revisar os itens de Atenção às Condições Crônicas e Acolhimento do Bloco B, que concentram 44 dos 80 pontos, e definir responsável por cada item não conforme.",
+    "Bloco C · Estrutura da AB":"Registrar no plano de ação distrital as não conformidades de Recursos Humanos e Componentes estruturais, itens que dependem da gestão e somam 55 dos 80 pontos."};
+  out.push({t:`Tratar não conformidades do ${worstBlock.n.split(" · ")[0]}`,w:BLOCK_ACT[worstBlock.n],src:["Manual de Avaliação de Qualidade, Eixo 1, Quadro 4 (pontuação por bloco)"],gain:`Pontos perdidos: ${worstBlock.m-worstBlock.v} de ${worstBlock.m}`});
+  return out}
+/* alertas gerados a partir dos dados */
+const alertState={};
+function alerts(scope){const list=[];for(const t of teams){if(!scope(t))continue;const s=t.hist[CUR],d=s-t.hist[CUR-1],z=zone(s);const b=breakdown(t);
+  if(s<600)list.push({id:"z"+t.id,sev:s<400?"crit":"crit",team:t,t:`${t.name} em zona ${z.name.toLowerCase()} (${s} pts)`,w:`${t.vuln?"Território de alta vulnerabilidade. ":""}Maior perda no Eixo 3: ${[...b.inds].sort((x,y)=>x.v/x.m-y.v/y.m)[0].n}.`,act:"Agendar visita técnica",score:1000-s+(t.vuln?200:0)});
+  if(d<=-60)list.push({id:"d"+t.id,sev:d<=-100?"crit":"alto",team:t,t:`${t.name} caiu ${Math.abs(d)} pontos entre ${CYCLES[CUR-1]} e ${CYCLES[CUR]}`,w:`Queda concentrada em ${b.e2<110?"Eixo 2 (ASU), atributo "+[...b.attrs].sort((x,y)=>x.v/x.m-y.v/y.m)[0].n:"Eixo 3, indicadores de pré-natal e crônicos"}.${s>=600&&s-Math.abs(d)<600?"":" Risco de mudar de zona no próximo ciclo."}`,act:"Enviar recomendações",score:Math.abs(d)*3});
+  else if(d<=-30&&s<800)list.push({id:"t"+t.id,sev:"aten",team:t,t:`${t.name}: tendência de queda em 2 ciclos`,w:`Pontuação em ${z.name.toLowerCase()} com perda de ${Math.abs(d)} pontos; NPS do ciclo em ${b.nps}.`,act:"Acompanhar",score:Math.abs(d)});
+  if(b.nps<0&&s>=600)list.push({id:"n"+t.id,sev:"aten",team:t,t:`${t.name}: NPS negativo (${b.nps}) neste ciclo`,w:"ASU na zona crítica pelo Quadro 7. Ingestão diária de respostas mostra detratores concentrados no atributo Acesso.",act:"Ver respostas",score:60});}
+  return list.sort((a,b)=>b.score-a.score)}
+/* ---------- estado ---------- */
+const PROFILES={distrital:{n:"Ana Lúcia",r:"Gestora do Distrito Sanitário IV",av:"AL",scope:t=>t.district==="DS IV",label:"Distrito Sanitário IV"},
+  local:{n:"Carlos Eduardo",r:"Gerente da USF Alto do Mandu",av:"CE",scope:t=>t.usf===LOCAL_USF,label:"USF Alto do Mandu"},
+  central:{n:"Renata",r:"Coordenadora NIIMA/SEAB",av:"R",scope:t=>true,label:"Rede municipal · 8 distritos"}};
+let profile="distrital",view="painel",selTeam=null,filterZone="todas",distFilter=null;
+let theme="auto";try{theme=localStorage.getItem("rastreia.theme")||"auto"}catch(e){}
+const prefs={email:true,whatsapp:false,digest:true};
+function applyTheme(){const r=document.documentElement;if(theme==="auto")r.removeAttribute("data-theme");else r.setAttribute("data-theme",theme);try{localStorage.setItem("rastreia.theme",theme)}catch(e){}}
+applyTheme();
+const NAV=[["painel","Painel","M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"],["alertas","Alertas","M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"],["resumo","Resumo do quadrimestre","M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"],["chat","Assistente","M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"],["config","Configurações","M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"]];
+const $=s=>document.querySelector(s);
+const fmt=n=>n.toLocaleString("pt-BR");
+const deltaHtml=d=>`<span class="delta num ${d>0?"up":d<0?"down":"flat"}">${d>0?"▲ +":d<0?"▼ ":"● "}${Math.abs(d)}</span>`;
+function toast(m,undo){const t=$("#toast");t.textContent=m;if(undo){const b=document.createElement("button");b.className="toast-undo";b.textContent="Desfazer";b.onclick=()=>{undo();t.classList.remove("show")};t.appendChild(b)}t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),undo?6000:2600)}
+function spark(hist,w=200,h=28){const mn=Math.min(...hist)-20,mx=Math.max(...hist)+20;const pts=hist.map((v,i)=>[i/(hist.length-1)*(w-6)+3,h-3-(v-mn)/(mx-mn)*(h-6)]);const d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");const last=pts[pts.length-1];const col=hist[4]-hist[3]<-30?"var(--serious)":hist[4]-hist[3]>30?"var(--good)":"var(--muted)";
+  return`<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="3" fill="${col}"/></svg>`}
+function renderNav(){const scoped=alerts(PROFILES[profile].scope).filter(a=>!alertState[a.id]);$("#nav").innerHTML=NAV.map(([k,l,p])=>`<button class="${view===k||(k==="painel"&&view==="equipe")?"on":""}" data-v="${k}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="${p}"/></svg>${l}${k==="alertas"&&scoped.length?`<span class="cnt">${scoped.length}</span>`:""}</button>`).join("");
+  $("#nav").querySelectorAll("button").forEach(b=>b.onclick=()=>{view=b.dataset.v;selTeam=null;$("#side").classList.remove("open");render()})}
+function header(title,sub,right=""){return`<div class="topbar"><div><button class="menu-btn btn sm" id="menu">☰ Menu</button><p class="sub">${sub}</p><h1>${title}</h1></div><div class="filters">${right}</div></div>`}
+function teamCard(t){const s=t.hist[CUR],z=zone(s),d=s-t.hist[CUR-1];return`<button class="team" data-id="${t.id}"><span class="nm">${t.name}</span><span class="usf">${t.usf} · ${t.prof} profissionais</span><span class="sc"><b class="num">${s}</b>${deltaHtml(d)}</span><span class="zone ${z.cls}">${z.name}</span>${spark(t.hist)}${t.vuln?`<span class="flag" style="background:var(--serious)" title="Território de alta vulnerabilidade"></span>`:""}</button>`}
+function tiles(list){const cur=list.map(t=>t.hist[CUR]),prev=list.map(t=>t.hist[CUR-1]);const avg=a=>Math.round(a.reduce((x,y)=>x+y,0)/a.length);const crit=list.filter(t=>t.hist[CUR]<600).length,critPrev=list.filter(t=>t.hist[CUR-1]<600).length;const drop=list.filter(t=>t.hist[CUR]-t.hist[CUR-1]<=-60).length;const al=alerts(t=>list.includes(t)).filter(a=>!alertState[a.id]);
+  return`<div class="tiles"><div class="card tile"><div class="eyebrow">Pontuação média</div><div class="v num">${avg(cur)}</div><div class="d">${deltaHtml(avg(cur)-avg(prev))} vs ${CYCLES[CUR-1]}</div></div><div class="card tile"><div class="eyebrow">Equipes abaixo de 600</div><div class="v num" style="color:${crit?"var(--serious)":"inherit"}">${crit}</div><div class="d">${crit-critPrev>0?"+":""}${crit-critPrev} em relação ao ciclo anterior</div></div><div class="card tile"><div class="eyebrow">Quedas de 60+ pontos</div><div class="v num">${drop}</div><div class="d">de ${list.length} equipes</div></div><div class="card tile"><div class="eyebrow">Alertas abertos</div><div class="v num" style="color:${al.some(a=>a.sev==="crit")?"var(--crit)":"inherit"}">${al.length}</div><div class="d">${al.filter(a=>a.sev==="crit").length} críticos</div></div></div>`}
+/* ---------- views ---------- */
+function vPainel(){const P=PROFILES[profile];let list=teams.filter(P.scope);
+  if(profile==="central")return vCentral();
+  const zones=["todas","Excelência","Qualidade","Aperfeiçoamento","Crítica","Insuficiente"];
+  const shown=list.filter(t=>filterZone==="todas"||zone(t.hist[CUR]).name===filterZone).sort((a,b)=>a.hist[CUR]-b.hist[CUR]);
+  const al=alerts(P.scope).filter(a=>!alertState[a.id]).slice(0,4);
+  return header(profile==="local"?"Minha unidade":"Painel do distrito",`${P.label} · ciclo ${CYCLES[CUR]} · ${list.length} equipes`,zones.map(z=>`<button class="chip ${filterZone===z?"on":""}" data-z="${z}">${z==="todas"?"Todas as zonas":z}</button>`).join(""))+tiles(list)+
+  `<div class="grid2"><section class="card"><div class="sec-h"><h2>Semáforo das equipes</h2><span class="eyebrow">ordenado da menor para a maior pontuação</span></div><div class="teams">${shown.map(teamCard).join("")||'<div class="empty">Nenhuma equipe nesta zona.</div>'}</div></section>
+  <section class="card"><div class="sec-h"><h2>Prioridades da semana</h2><button class="more" data-go="alertas">Ver todos</button></div><div class="alerts">${al.map(alertRow).join("")||'<div class="empty">Sem alertas abertos.</div>'}</div><div class="ai-note">Critérios de severidade: zonas do Manual de Avaliação, variação entre ciclos e vulnerabilidade do território. Validação pendente com o NIIMA.</div></section></div>`}
+function alertRow(a){const st=alertState[a.id]||"";const S={crit:"Crítico",alto:"Alto",aten:"Atenção"};return`<div class="alert ${st}" data-aid="${a.id}"><div class="stripe" style="background:var(--${a.sev==="crit"?"crit":a.sev==="alto"?"serious":"warn"})"></div><div><span class="sev sev-${a.sev}">${S[a.sev]}</span><div class="t">${a.t}</div><div class="w">${a.w}</div></div><div class="act"><button class="btn pri sm" data-open="${a.team.id}">${a.act}</button>${st?`<button class="btn sm" data-undo="${a.id}">Desfazer</button>`:`<button class="btn sm" data-done="${a.id}">Tratar</button><button class="btn sm" data-snooze="${a.id}">Adiar</button>`}</div></div>`}
+function vAlertas(){const P=PROFILES[profile];const al=alerts(P.scope);const open=al.filter(a=>!alertState[a.id]);
+  return header("Alertas de priorização",`${P.label} · ${open.length} abertos · ordenados por urgência`,`<span class="chip">Envio: e-mail institucional (diário)</span><span class="chip">WhatsApp e Telegram: sob aprovação</span>`)+
+  `<section class="card"><div class="alerts">${al.map(alertRow).join("")||'<div class="empty">Sem alertas para este recorte.</div>'}</div></section>`}
+function vEquipe(){const t=teams.find(x=>x.id===selTeam);const b=breakdown(t);const s=t.hist[CUR],z=zone(s);const R=recs(t);
+  const axis=(n,v,m,subs)=>`<div class="axis"><div class="lbl"><b>${n}</b><span class="num">${v} / ${m}</span></div><div class="bar"><i style="width:${v/m*100}%"></i></div><div class="sub-bars">${subs.map(x=>`<div class="sub ${x.v/x.m<.55?"low":""}" title="${x.n}: ${x.v} de ${x.m}"><span>${x.n}</span><div class="bar"><i style="width:${x.v/x.m*100}%"></i></div><span class="num" style="text-align:right">${x.v}/${x.m}</span></div>`).join("")}</div></div>`;
+  const W=520,H=150,mn=Math.min(...t.hist)-40,mx=Math.max(...t.hist)+40;const px=i=>40+i*(W-60)/4,py=v=>H-24-(v-mn)/(mx-mn)*(H-40);
+  const line=t.hist.map((v,i)=>(i?"L":"M")+px(i)+","+py(v)).join(" ");
+  const bands=ZONES.slice(0,4).map(z=>z[2]).filter(v=>v>mn&&v<mx).map(v=>`<line x1="40" x2="${W-20}" y1="${py(v)}" y2="${py(v)}" stroke="var(--line)" stroke-dasharray="3 4"/><text x="${W-18}" y="${py(v)+4}" font-size="10" fill="var(--muted)">${v}</text>`).join("");
+  return`<button class="back" id="back">← Voltar ao painel</button>${header(t.name,`${t.usf} · ${t.district} · ${t.type} · ${t.prof} profissionais${t.vuln?" · território de alta vulnerabilidade":""}`,`<span class="zone ${z.cls}" style="font-size:13px;padding:6px 12px">${z.name} · ${s} pts</span>`)}
+  <div class="detail"><div style="display:flex;flex-direction:column;gap:16px">
+    <section class="card trend"><div class="sec-h" style="padding:0 0 8px"><h2>Evolução entre ciclos</h2>${deltaHtml(b.delta)}</div>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Pontuação total por ciclo">${bands}<path d="${line}" fill="none" stroke="var(--bar)" stroke-width="2.5" stroke-linejoin="round"/>${t.hist.map((v,i)=>`<g><circle cx="${px(i)}" cy="${py(v)}" r="${i===CUR?5:3.5}" fill="${i===CUR?"var(--accent)":"var(--surface)"}" stroke="var(--bar)" stroke-width="2"/><text x="${px(i)}" y="${py(v)-10}" font-size="11" text-anchor="middle" fill="var(--ink-2)" class="num">${v}</text><text x="${px(i)}" y="${H-6}" font-size="11" text-anchor="middle" fill="var(--muted)">${CYCLES[i]}</text></g>`).join("")}</svg>
+      <div class="tl"><div class="done"><i></i>Abertura do ciclo</div><div class="done"><i></i>Autoavaliação (Eixo 1)</div><div class="now"><i></i>ASU em coleta (Eixo 2)</div><div><i></i>Certificação</div></div></section>
+    <section class="card axes"><div class="sec-h" style="padding:0"><h2>Onde a pontuação foi perdida</h2><span class="eyebrow">1.000 pontos por ciclo</span></div>
+      ${axis("Eixo 1 · Autoavaliação",b.e1,200,b.blocks)}${axis("Eixo 2 · Satisfação do usuário (NPS "+b.nps+")",b.e2,200,b.attrs)}${axis("Eixo 3 · Desempenho assistencial",b.e3,600,b.inds)}</section></div>
+    <section class="card"><div class="sec-h"><h2>Recomendações para o próximo ciclo</h2><span class="eyebrow">geradas por IA · com fonte</span></div><div class="recs">${R.map((r,i)=>`<div class="rec"><div class="n">${i+1}</div><div><div class="t">${r.t}</div><div class="w">${r.w}</div>${r.src.map(s=>`<span class="src">${s}</span>`).join("")}<div class="gain">${r.gain}</div></div></div>`).join("")}</div>
+      <div style="padding:12px 16px;display:flex;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line)"><button class="btn pri" data-toast="Recomendações enviadas ao gerente da ${t.usf} por e-mail institucional (simulado).">Enviar à unidade</button><button class="btn" data-toast="Plano de apoio registrado para discussão na visita técnica (simulado).">Registrar plano de apoio</button><button class="btn" data-ask="Por que a ${t.name} perdeu pontos neste ciclo?">Perguntar ao assistente</button></div>
+      <div class="ai-note">A IA sugere; a decisão é do gestor. Cada recomendação cita o item do manual ou o indicador de origem e pode ser revisada pelo NIIMA.</div></section></div>`}
+function vResumo(){const P=PROFILES[profile];const list=teams.filter(P.scope);const cur=list.map(t=>t.hist[CUR]);const avg=Math.round(cur.reduce((a,b)=>a+b,0)/cur.length),avgP=Math.round(list.reduce((a,t)=>a+t.hist[CUR-1],0)/list.length);
+  const ranked=[...list].sort((a,b)=>b.hist[CUR]-a.hist[CUR]);const byDelta=[...list].sort((a,b)=>(a.hist[CUR]-a.hist[CUR-1])-(b.hist[CUR]-b.hist[CUR-1]));
+  const crit=list.filter(t=>t.hist[CUR]<600);const dist={};list.forEach(t=>{const z=zone(t.hist[CUR]).name;dist[z]=(dist[z]||0)+1});
+  const loss={e1:0,e2:0,e3:0};list.forEach(t=>{const b=breakdown(t);loss.e1+=200-b.e1;loss.e2+=200-b.e2;loss.e3+=600-b.e3});const tot=loss.e1+loss.e2+loss.e3;
+  const indLoss={};list.forEach(t=>breakdown(t).inds.forEach(i=>indLoss[i.n]=(indLoss[i.n]||0)+(i.m-i.v)));const topInd=Object.entries(indLoss).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const row=t=>`<tr class="click" data-id="${t.id}"><td>${t.name}</td><td>${profile==="central"?t.district:t.usf}</td><td class="num">${t.hist[CUR-1]}</td><td class="num">${t.hist[CUR]}</td><td>${deltaHtml(t.hist[CUR]-t.hist[CUR-1])}</td><td><span class="zone ${zone(t.hist[CUR]).cls}">${zone(t.hist[CUR]).name}</span></td></tr>`;
+  return header("Resumo do quadrimestre",`${P.label} · ciclo ${CYCLES[CUR]} · gerado automaticamente em 22/09/2026`,`<button class="btn pri" data-toast="PDF gerado e anexado ao processo SEI (simulado).">Exportar PDF</button><button class="btn" data-toast="Resumo enviado por e-mail institucional (simulado).">Enviar por e-mail</button>`)+
+  `<section class="card report"><div class="hd"><div><div class="eyebrow">Recife Monitora · Relatório automático</div><h2>${P.label}: síntese do ciclo ${CYCLES[CUR]}</h2></div><div class="eyebrow" style="text-align:right">${list.length} equipes<br>${CYCLES[CUR-1]} → ${CYCLES[CUR]}</div></div>
+  <div class="kv"><div><b class="num">${avg}</b><span>pontuação média (${avgP} no ciclo anterior)</span></div><div><b class="num">${crit.length}</b><span>equipes abaixo de 600 pontos</span></div><div><b class="num">${dist["Excelência"]||0}</b><span>equipes em excelência</span></div><div><b class="num">${byDelta.filter(t=>t.hist[CUR]-t.hist[CUR-1]<=-60).length}</b><span>quedas de 60 pontos ou mais</span></div></div>
+  <h3>Leitura do ciclo</h3><p>A pontuação média ${avg>=avgP?"subiu":"caiu"} ${Math.abs(avg-avgP)} pontos em relação a ${CYCLES[CUR-1]}. ${crit.length?`${crit.length} equipe${crit.length>1?"s":""} ${crit.length>1?"estão":"está"} abaixo de 600 pontos, ${crit.filter(t=>t.vuln).length} dela${crit.filter(t=>t.vuln).length===1?"":"s"} em território de alta vulnerabilidade, o que recomenda prioridade nas visitas técnicas.`:"Nenhuma equipe está em zona crítica ou insuficiente."} A perda de pontos concentra-se no Eixo 3 (${Math.round(loss.e3/tot*100)}% dos pontos não alcançados), seguido do Eixo 2 (${Math.round(loss.e2/tot*100)}%) e do Eixo 1 (${Math.round(loss.e1/tot*100)}%).</p>
+  <h3>Causas de perda por eixo</h3><ul><li><strong>Eixo 3:</strong> os indicadores com maior perda acumulada são ${topInd.map(x=>`"${x[0]}" (${x[1]} pts)`).join(", ")}.</li><li><strong>Eixo 2:</strong> o atributo Acesso é o mais citado entre detratores; pelo Quadro 7 ele tem peso 2 na conversão do NPS em pontos.</li><li><strong>Eixo 1:</strong> o Bloco C (estrutura) concentra as não conformidades que dependem da gestão distrital e central.</li></ul>
+  <h3>Maiores quedas</h3><div class="tbl-wrap"><table><thead><tr><th>Equipe</th><th>${profile==="central"?"Distrito":"Unidade"}</th><th>${CYCLES[CUR-1]}</th><th>${CYCLES[CUR]}</th><th>Variação</th><th>Zona</th></tr></thead><tbody>${byDelta.slice(0,5).map(row).join("")}</tbody></table></div>
+  <h3>Maiores ganhos</h3><div class="tbl-wrap"><table><thead><tr><th>Equipe</th><th>${profile==="central"?"Distrito":"Unidade"}</th><th>${CYCLES[CUR-1]}</th><th>${CYCLES[CUR]}</th><th>Variação</th><th>Zona</th></tr></thead><tbody>${byDelta.slice(-3).reverse().map(row).join("")}</tbody></table></div>
+  <h3>Ranking do ciclo</h3><div class="tbl-wrap"><table><thead><tr><th>#</th><th>Equipe</th><th>${profile==="central"?"Distrito":"Unidade"}</th><th>Pontos</th><th>Zona</th></tr></thead><tbody>${ranked.slice(0,10).map((t,i)=>`<tr class="click" data-id="${t.id}"><td class="num">${i+1}</td><td>${t.name}</td><td>${profile==="central"?t.district:t.usf}</td><td class="num">${t.hist[CUR]}</td><td><span class="zone ${zone(t.hist[CUR]).cls}">${zone(t.hist[CUR]).name}</span></td></tr>`).join("")}</tbody></table></div>${ranked.length>10?`<p class="gain" style="margin-top:6px">Exibindo 10 de ${ranked.length} equipes. A versão em PDF traz a lista completa.</p>`:""}
+  <h3>Três ações recomendadas</h3><ul><li>Priorizar visita técnica às equipes abaixo de 600 pontos em território vulnerável, com plano de apoio registrado antes do fechamento da ASU.</li><li>Mutirão distrital de pré-natal e citopatológico, indicadores com maior perda acumulada no Eixo 3.</li><li>Revisar a organização da agenda para demanda espontânea nas unidades com NPS negativo no atributo Acesso.</li></ul>
+  <p class="gain" style="margin-top:18px">Fontes: Manual de Avaliação de Qualidade (v. 02.03.26), Quadros 4, 7 e 10; indicadores do Eixo 3 conforme Anexo 2. Migrações de profissional e INE resolvidas antes da agregação (regra D4).</p></section>`}
+function vCentral(){const byD=DISTRICTS.map(d=>{const l=teams.filter(t=>t.district===d);const avg=Math.round(l.reduce((a,t)=>a+t.hist[CUR],0)/l.length),prev=Math.round(l.reduce((a,t)=>a+t.hist[CUR-1],0)/l.length);return{d,l,avg,prev,crit:l.filter(t=>t.hist[CUR]<600).length}}).sort((a,b)=>a.avg-b.avg);
+  const all=teams;const al=alerts(()=>true).filter(a=>!alertState[a.id]&&a.sev==="crit").slice(0,5);
+  const focus=distFilter?teams.filter(t=>t.district===distFilter).sort((a,b)=>a.hist[CUR]-b.hist[CUR]):null;
+  return header("Painel municipal","Rede municipal · 8 distritos sanitários · ciclo "+CYCLES[CUR],`<span class="chip">${fmt(3000)} profissionais</span><span class="chip">${teams.length} equipes na amostra</span>`)+tiles(all)+
+  `<div class="grid2"><section class="card"><div class="sec-h"><h2>Distritos por pontuação média</h2><span class="eyebrow">clique para ver as equipes</span></div><div class="dist">${byD.map(x=>`<div class="drow ${distFilter===x.d?"on":""}" data-d="${x.d}"><span><b>${x.d}</b><br><span class="cr">${x.crit} abaixo de 600</span></span><div class="bar" title="${x.d}: ${x.avg} pontos"><i style="width:${x.avg/10}%;background:${x.avg<700?"var(--serious)":"var(--bar)"}"></i></div><span class="num" style="text-align:right"><b>${x.avg}</b><br>${deltaHtml(x.avg-x.prev)}</span></div>`).join("")}</div>
+  <div class="ai-note">Padrão detectado: ${byD.slice(0,2).map(x=>x.d).join(" e ")} concentram ${byD[0].crit+byD[1].crit} das ${all.filter(t=>t.hist[CUR]<600).length} equipes abaixo de 600 pontos. O atributo Acesso da ASU caiu em 6 dos 8 distritos.</div></section>
+  <section class="card"><div class="sec-h"><h2>${focus?"Equipes de "+distFilter:"Alertas críticos da rede"}</h2>${focus?'<button class="more" data-d="">Fechar</button>':'<button class="more" data-go="alertas">Ver todos</button>'}</div>${focus?`<div class="teams" style="grid-template-columns:1fr 1fr">${focus.map(teamCard).join("")}</div>`:`<div class="alerts">${al.map(alertRow).join("")}</div>`}</section></div>`}
+/* ---------- chatbot (roteirizado) ---------- */
+const chatLog=[];
+const QUICK=["Por que a eSF Alto do Mandu I caiu de zona?","Quais os prazos do ciclo 2026.2?","Como o NPS vira pontos no Eixo 2?","Quais equipes do distrito estão em zona crítica?","O que é avaliado no Bloco C?"];
+function answer(q){const P=PROFILES[profile];const l=q.toLowerCase();const scoped=teams.filter(P.scope);
+  const named=teams.find(t=>l.includes(t.name.toLowerCase()))||scoped.find(t=>l.includes(t.usf.replace("USF ","").toLowerCase()));
+  if(named&&!P.scope(named))return{h:`Não tenho acesso aos dados da ${named.name}: ela está fora do recorte do seu perfil (${P.label}). Perfil local vê a própria equipe; distrital vê o distrito; central vê a rede.`,src:["Documento de Requisitos, regras de negócio (perfis de acesso)"]};
+  if(named&&/(por que|porque|caiu|perdeu|queda|motivo)/.test(l)){const b=breakdown(named);const wi=[...b.inds].sort((x,y)=>x.v/x.m-y.v/y.m).slice(0,2),wa=[...b.attrs].sort((x,y)=>x.v/x.m-y.v/y.m)[0];const s=named.hist[CUR],p=named.hist[CUR-1];
+    return{h:`A ${named.name} foi de ${p} para ${s} pontos (${s-p>=0?"+":""}${s-p}), passando de ${zone(p).name} para ${zone(s).name}. A perda se concentra em:<ul><li><b>Eixo 3</b>: "${wi[0].n}" (${wi[0].v} de ${wi[0].m}) e "${wi[1].n}" (${wi[1].v} de ${wi[1].m}).</li><li><b>Eixo 2</b>: NPS ${b.nps}, com pior avaliação em ${wa.n} (${wa.v} de ${wa.m}).</li><li><b>Eixo 1</b>: ${b.e1} de 200 pontos.</li></ul>Abra a página da equipe para ver as 4 recomendações priorizadas.`,src:["Resultados do ciclo "+CYCLES[CUR]+" (middleware de leitura)","Manual de Avaliação de Qualidade, Quadros 4 e 7"],team:named}}
+  if(/prazo|calend|cronograma|quando|data/.test(l))return{h:`Ciclo ${CYCLES[CUR]} (2º quadrimestre de 2026):<ul><li>Autoavaliação por equipes (Eixo 1): encerrada em 31/08.</li><li>Satisfação do usuário (Eixo 2): coleta contínua por QR code e WhatsApp até 30/09.</li><li>Indicadores de desempenho (Eixo 3): consolidação a partir dos dados do e-SUS até 15/10.</li><li>Certificação e divulgação no painel: prevista para 31/10.</li></ul>Datas ilustrativas para o protótipo; a versão final lê o calendário oficial do programa.`,src:["Manual de Avaliação de Qualidade, seção Ciclos e Fases","Manual de Gestão para Gestores(as) Distritais, v3"]};
+  if(/nps|asu|satisfa|detrator|promotor/.test(l))return{h:`O Eixo 2 vale 200 pontos e usa uma adaptação do NPS. Cada uma das 6 perguntas gera um NPS (promotores menos detratores) que é convertido em pontos por faixa: NPS de 75 a 100 dá a pontuação máxima; de 50 a 74, zona de qualidade; de 0 a 49, aperfeiçoamento; NPS negativo, zona crítica. Acesso, Integralidade e Longitudinalidade têm peso 2 (até 40 pontos cada); os demais atributos, peso 1 (até 20 pontos).`,src:["Manual de Avaliação de Qualidade, Eixo 2, Quadros 5 e 7"]};
+  if(/bloco c|estrutura/.test(l))return{h:`O Bloco C do Eixo 1 avalia a estrutura da Atenção Básica e vale 80 pontos: Delineamento da população eletiva (5), Mecanismos para oferecer acesso (15), Ferramentas de planejamento (5), Recursos Humanos (25) e Componentes estruturais (30). Como boa parte depende da gestão, o Manual de Gestão orienta os distritos a olhar o Bloco C na estratificação das equipes.`,src:["Manual de Avaliação de Qualidade, Eixo 1, Quadro 4","Manual de Gestão para Gestores(as) Distritais, seção Certificação de Equipes"]};
+  if(/zona|classifica|certifica|faixa|excel|crítica|critica/.test(l)&&!/quais/.test(l))return{h:`A certificação usa a pontuação final dos 3 eixos (até 1.000 pontos): Excelência a partir de 900; Qualidade de 800 a 899; Aperfeiçoamento de 600 a 799; Crítica de 400 a 599; Insuficiente de 0 a 399. Equipes que se recusam a participar ou não enviam dados aos sistemas da AB são desclassificadas.`,src:["Manual de Avaliação de Qualidade, Quadro 10 (Certificação da qualidade das equipes)"]};
+  if(/quais|liste|lista|mostre/.test(l)){const crit=scoped.filter(t=>t.hist[CUR]<600).sort((a,b)=>a.hist[CUR]-b.hist[CUR]);return{h:crit.length?`${crit.length} equipe${crit.length>1?"s":""} de ${P.label} abaixo de 600 pontos no ciclo ${CYCLES[CUR]}:<ul>${crit.slice(0,8).map(t=>`<li>${t.name} (${t.usf}): ${t.hist[CUR]} pts, ${zone(t.hist[CUR]).name}${t.vuln?", território vulnerável":""}</li>`).join("")}</ul>${crit.length>8?`E mais ${crit.length-8}. `:""}Recomendo começar pelas equipes em território vulnerável.`:`Nenhuma equipe de ${P.label} está abaixo de 600 pontos neste ciclo.`,src:["Resultados do ciclo "+CYCLES[CUR]+" (middleware de leitura)","Manual de Avaliação de Qualidade, Quadro 10"]}}
+  if(/migra|ine|vínculo|vinculo/.test(l))return{h:`Quando um profissional ou um INE muda de equipe, a avaliação de NPS conta para a equipe em que ele estava vinculado na data da interação, e o INE inicia nova série a partir da mudança. Essas migrações são resolvidas antes de qualquer relatório, por isso os números aqui podem divergir do painel atual apenas por regra documentada.`,src:["Documento de Requisitos, decisões D4 e RF03, RNF06"]};
+  if(/dado|lgpd|privac|externa|seguran/.test(l))return{h:`Este assistente responde apenas com a base interna do programa (manuais, resultados e documentos do NIIMA), respeita o seu perfil de acesso e não envia dados para serviços externos. Em produção a inferência roda em servidor da própria Secretaria; toda consulta fica registrada em trilha de auditoria.`,src:["Documento de Requisitos, RF09, RNF01, RNF05"]};
+  return{h:`Posso ajudar com resultados das equipes do seu recorte (${P.label}), critérios e pontuação dos 3 eixos, prazos do ciclo e regras do programa. Experimente uma das perguntas sugeridas ou cite o nome de uma equipe.`,src:["Base interna do Recife Monitora"]}}
+function vChat(){const P=PROFILES[profile];return header("Assistente RASTRE.IA",`Responde com a base interna do programa · recorte: ${P.label}`,`<span class="chip">Sem acesso a IAs externas</span>`)+
+  `<section class="card chat"><div class="msgs" id="msgs">${chatLog.length?"":`<div class="msg b">Olá, ${P.n.split(" ")[0]}. Posso responder sobre resultados, manuais, prazos e critérios do Recife Monitora, sempre citando a fonte. O que você quer saber?</div>`}${chatLog.map(m=>m.u?`<div class="msg u">${m.u}</div>`:`<div class="msg b">${m.h}<div class="srcs">${m.src.map(s=>`<span class="src">${s}</span>`).join("")}</div>${m.team?`<div style="margin-top:8px"><button class="btn sm" data-open="${m.team.id}">Abrir página da equipe</button></div>`:""}<div class="scope">Perfil ${profile} · dados do ciclo ${CYCLES[CUR]}</div></div>`).join("")}</div>
+  <div class="composer"><div class="quick">${QUICK.map(q=>`<button data-q="${q}">${q}</button>`).join("")}</div><form id="chatf"><input id="chati" autocomplete="off" placeholder="Pergunte sobre equipes, prazos, critérios ou manuais" aria-label="Pergunta"><button class="btn pri" type="submit">Enviar</button></form><div class="privacy">🔒 Consultas restritas à base interna, registradas em trilha de auditoria (LGPD).</div></div></section>`}
+function ask(q){chatLog.push({u:q});view="chat";render();const m=$("#msgs");const ty=document.createElement("div");ty.className="typing";ty.textContent="Consultando a base interna…";m.appendChild(ty);m.scrollTop=m.scrollHeight;
+  setTimeout(()=>{chatLog.push(answer(q));render();const mm=$("#msgs");mm.scrollTop=mm.scrollHeight},700)}
+function vConfig(){const P=PROFILES[profile];const I={auto:"M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18V4a8 8 0 0 1 0 16z",light:"M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0-5h0l1 3h-2l1-3zm0 20l-1-3h2l-1 3zM2 12l3-1v2l-3-1zm20 0l-3 1v-2l3 1zM4.9 4.9l2.8 1.4-1.4 1.4L4.9 4.9zm14.2 14.2l-2.8-1.4 1.4-1.4 1.4 2.8zM4.9 19.1l1.4-2.8 1.4 1.4-2.8 1.4zM19.1 4.9l-1.4 2.8-1.4-1.4 2.8-1.4z",dark:"M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"};
+  const opt=(k,l)=>`<button class="${theme===k?"on":""}" data-theme="${k}" aria-pressed="${theme===k}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="${I[k]}"/></svg>${l}</button>`;
+  const sw=(k,t,w)=>`<div class="card setting"><div><div class="t">${t}</div><div class="w">${w}</div></div><button class="switch ${prefs[k]?"on":""}" data-pref="${k}" role="switch" aria-checked="${prefs[k]}" aria-label="${t}"></button></div>`;
+  return header("Configurações",`${P.n} · perfil ${profile}`)+`<div class="settings">
+  <div class="card setting"><div><div class="t">Aparência</div><div class="w">Escolha entre tema claro, escuro ou seguir a preferência do sistema. A escolha fica salva neste navegador.</div></div><div class="seg" role="group" aria-label="Tema">${opt("auto","Automático")}${opt("light","Claro")}${opt("dark","Escuro")}</div></div>
+  <h2 style="margin-top:8px">Notificações</h2>
+  ${sw("email","Alertas por e-mail institucional","Resumo diário dos alertas críticos e altos do seu recorte.")}
+  ${sw("whatsapp","Alertas por WhatsApp","Grupo institucional do distrito. Depende de aprovação da SEAB.")}
+  ${sw("digest","Resumo do quadrimestre automático","Receber o PDF assim que o ciclo for certificado.")}
+  <div class="ai-note" style="border:0;padding:4px 2px">Perfis, acessos e regras de criticidade são definidos pelo NIIMA e não podem ser alterados aqui.</div></div>`}
+/* ---------- render ---------- */
+function render(){const P=PROFILES[profile];$("#who-n").textContent=P.n;$("#who-r").textContent=P.r;$("#who-av").textContent=P.av;renderNav();
+  const m=$("#main");m.innerHTML=view==="painel"?vPainel():view==="alertas"?vAlertas():view==="equipe"?vEquipe():view==="resumo"?vResumo():view==="config"?vConfig():vChat();
+  m.querySelectorAll("[data-id]").forEach(el=>el.onclick=()=>{selTeam=+el.dataset.id;view="equipe";render();window.scrollTo(0,0)});
+  m.querySelectorAll("[data-open]").forEach(el=>el.onclick=e=>{e.stopPropagation();selTeam=+el.dataset.open;view="equipe";render();window.scrollTo(0,0)});
+  m.querySelectorAll("[data-done]").forEach(el=>el.onclick=e=>{e.stopPropagation();const id=el.dataset.done;alertState[id]="done";render();toast("Alerta marcado como tratado.",()=>{delete alertState[id];render()})});
+  m.querySelectorAll("[data-undo]").forEach(el=>el.onclick=e=>{e.stopPropagation();delete alertState[el.dataset.undo];toast("Alerta reaberto.");render()});
+  m.querySelectorAll("[data-snooze]").forEach(el=>el.onclick=e=>{e.stopPropagation();const id=el.dataset.snooze;alertState[id]="snoozed";render();toast("Alerta adiado por 7 dias.",()=>{delete alertState[id];render()})});
+  m.querySelectorAll("[data-z]").forEach(el=>el.onclick=()=>{filterZone=el.dataset.z;render()});
+  m.querySelectorAll("[data-d]").forEach(el=>el.onclick=()=>{distFilter=el.dataset.d||null;render()});
+  m.querySelectorAll("[data-go]").forEach(el=>el.onclick=()=>{view=el.dataset.go;render()});
+  m.querySelectorAll("[data-toast]").forEach(el=>el.onclick=()=>toast(el.dataset.toast));
+  m.querySelectorAll("[data-ask]").forEach(el=>el.onclick=()=>ask(el.dataset.ask));
+  m.querySelectorAll("[data-q]").forEach(el=>el.onclick=()=>ask(el.dataset.q));
+  m.querySelectorAll("[data-theme]").forEach(el=>el.onclick=()=>{theme=el.dataset.theme;applyTheme();render();toast(theme==="auto"?"Tema segue o sistema.":theme==="light"?"Tema claro ativado.":"Tema escuro ativado.")});
+  m.querySelectorAll("[data-pref]").forEach(el=>el.onclick=()=>{prefs[el.dataset.pref]=!prefs[el.dataset.pref];render()});
+  const back=$("#back");if(back)back.onclick=()=>{view="painel";render()};
+  const menu=$("#menu");if(menu)menu.onclick=()=>$("#side").classList.toggle("open");
+  const f=$("#chatf");if(f){f.onsubmit=e=>{e.preventDefault();const v=$("#chati").value.trim();if(v){$("#chati").value="";ask(v)}};const mm=$("#msgs");mm.scrollTop=mm.scrollHeight}}
+$("#profile").onchange=e=>{profile=e.target.value;view="painel";selTeam=null;filterZone="todas";distFilter=null;chatLog.length=0;render()};
+document.addEventListener("click",e=>{if(window.innerWidth<=820&&!e.target.closest("#side")&&!e.target.closest("#menu"))$("#side").classList.remove("open")});
+render();
+</script>
+</body></html>

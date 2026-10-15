@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# saídas geradas pelo pipeline (reexecutar preparar_dados.py); o log de qualidade fica versionado
+/data/saida*/limpo/
+/data/saida*/rastreia_data.json

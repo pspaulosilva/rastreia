@@ -1,0 +1,210 @@
+[
+ {
+  "tabela": "equipes",
+  "problema": "distrito_sanitario com 19 grafias (maiúsculas, sem acento, 'ds v')",
+  "linhas": 19,
+  "decisao": "normalizado para 'DS <romano>' por regex",
+  "exemplo": [
+   "DISTRITO SANITÁRIO I",
+   "DISTRITO SANITÁRIO V",
+   "DISTRITO SANITÁRIO VI",
+   "DISTRITO SANITÁRIO VII",
+   "DS II",
+   "DS III"
+  ]
+ },
+ {
+  "tabela": "equipes",
+  "problema": "tipo_equipe com variações (e-SF, ESF, ' eSF', esb...)",
+  "linhas": 23,
+  "decisao": "normalizado para eSF / eSB / eMulti",
+  "exemplo": [
+   " eSF",
+   "EMULTI",
+   "ESB",
+   "ESF",
+   "e-Multi",
+   "e-SB",
+   "e-SF",
+   "eMulti",
+   "eSB",
+   "eSF",
+   "esb ",
+   "esf"
+  ]
+ },
+ {
+  "tabela": "equipes",
+  "problema": "nome_unidade com espaços nas bordas (13 CNES com 2 grafias)",
+  "linhas": 22,
+  "decisao": "strip; CNES passa a ter 1 nome",
+  "exemplo": null
+ },
+ {
+  "tabela": "equipes",
+  "problema": "populacao_adscrita ausente",
+  "linhas": 11,
+  "decisao": "mantido nulo; normalização por porte usa n_profissionais",
+  "exemplo": null
+ },
+ {
+  "tabela": "equipes",
+  "problema": "n_profissionais máximo 53 (cliente informou até 80)",
+  "linhas": 0,
+  "decisao": "registrado como divergência a confirmar com o cliente",
+  "exemplo": null
+ },
+ {
+  "tabela": "resultados",
+  "problema": "ciclo em 4 formatos (AAAA.Q, AAAA-Q, AAAAQn, Q/AAAA)",
+  "linhas": 96,
+  "decisao": "normalizado para AAAA.Q",
+  "exemplo": null
+ },
+ {
+  "tabela": "resultados",
+  "problema": "equipe+ciclo duplicados (mesmo conteúdo, ciclo grafado diferente)",
+  "linhas": 16,
+  "decisao": "mantida 1 linha por equipe+ciclo",
+  "exemplo": null
+ },
+ {
+  "tabela": "resultados",
+  "problema": "codigo_ine sem cadastro em equipes.csv (INE 7xxxxxxxxx)",
+  "linhas": 13,
+  "decisao": "excluídos do painel; listados para o cliente",
+  "exemplo": [
+   "7304288101",
+   "7868338244",
+   "7949616694"
+  ]
+ },
+ {
+  "tabela": "resultados",
+  "problema": "eixo2_total com vírgula decimal",
+  "linhas": 122,
+  "decisao": "convertido para ponto",
+  "exemplo": null
+ },
+ {
+  "tabela": "resultados",
+  "problema": "situacao_participacao = Desclassificada (sem pontuação)",
+  "linhas": 57,
+  "decisao": "mantida como ausência de dado, nunca como zero (regra 2)",
+  "exemplo": null
+ },
+ {
+  "tabela": "resultados",
+  "problema": "taxa < 30% mas bloco_a_valido = True (viola regra 1)",
+  "linhas": 0,
+  "decisao": "recalculado: bloco_a_valido = taxa >= 0,30",
+  "exemplo": []
+ },
+ {
+  "tabela": "resultados",
+  "problema": "taxa_resposta_bloco_a fora de [0,1]",
+  "linhas": 7,
+  "decisao": "taxa anulada; validade do Bloco A mantida como veio",
+  "exemplo": [
+   2.4,
+   -0.1,
+   1.35
+  ]
+ },
+ {
+  "tabela": "resultados",
+  "problema": "Bloco A inválido registrado como 0 e somado ao Eixo 1 (regra 1 diz 'não computado')",
+  "linhas": 147,
+  "decisao": "mantido como a plataforma calcula (0 pts) e sinalizado; a IA trata como 'não avaliado', não como desempenho ruim",
+  "exemplo": null
+ },
+ {
+  "tabela": "resultados",
+  "problema": "eixo2_total ausente nos 3 ciclos de 2023, embora pontuacao_final o inclua",
+  "linhas": 170,
+  "decisao": "reconstruído como final - eixo1 - eixo3 (sinalizado)",
+  "exemplo": null
+ },
+ {
+  "tabela": "resultados",
+  "problema": "pontuacao_final impossível (-35, 1247, 1580, 9999)",
+  "linhas": 9,
+  "decisao": "recalculada como eixo1 + eixo2 + eixo3; eixo2 ausente estimado pela média do NPS + 100",
+  "exemplo": [
+   1247.0,
+   1580.0,
+   -35.0,
+   9999.0
+  ]
+ },
+ {
+  "tabela": "resultados",
+  "problema": "máximos dos blocos do Eixo 1 vieram como A=80, B=60, C=60; Manual define A=40, B=80, C=80",
+  "linhas": 1306,
+  "decisao": "base sintética reescalada proporcionalmente para os máximos do Manual; pontuação final recomposta",
+  "exemplo": null
+ },
+ {
+  "tabela": "resultados",
+  "problema": "zonas vieram com faixas 850/700/550/400 (dicionário); Manual define 900/800/600/400",
+  "linhas": 512,
+  "decisao": "zona recalculada pelas faixas do Manual (Quadro 10) sobre a pontuação recomposta",
+  "exemplo": null
+ },
+ {
+  "tabela": "resultados",
+  "problema": "equipes sem linha em alguns ciclos (adesão voluntária)",
+  "linhas": 89,
+  "decisao": "ausência tratada como 'não participou', não como queda",
+  "exemplo": null
+ },
+ {
+  "tabela": "eixo3",
+  "problema": "percentual_alcancado em escala 0-100 em vez de 0-1",
+  "linhas": 380,
+  "decisao": "dividido por 100; pontos_obtidos conferidos = pct x peso",
+  "exemplo": null
+ },
+ {
+  "tabela": "eixo3",
+  "problema": "IND03 e IND08 (odontologia) não se aplicam ao grupo 4; pesos variam por grupo",
+  "linhas": 0,
+  "decisao": "recomendações só citam indicadores aplicáveis ao grupo da equipe (regra 3)",
+  "exemplo": null
+ },
+ {
+  "tabela": "nps",
+  "problema": "nps ausente em atributos isolados",
+  "linhas": 260,
+  "decisao": "mantido nulo; média do ciclo ignora o atributo ausente",
+  "exemplo": null
+ },
+ {
+  "tabela": "nps",
+  "problema": "5 atributos (acolhimento, espera, resolutividade, estrutura, vínculo) e conversão eixo2 = média NPS + 100, diferentes do Manual (6 perguntas, Quadro 7 por faixas)",
+  "linhas": 0,
+  "decisao": "mantido o esquema dos dados como simplificação da base sintética; conversão oficial (Quadro 7) entra com os dados reais",
+  "exemplo": null
+ },
+ {
+  "tabela": "planos",
+  "problema": "texto_plano vazio ou nulo",
+  "linhas": 12,
+  "decisao": "mantido com marcador 'sem texto'; excluído da análise de linguagem",
+  "exemplo": null
+ },
+ {
+  "tabela": "planos",
+  "problema": "textos repetidos (modelos padrão)",
+  "linhas": 194,
+  "decisao": "mantidos; indício de planos genéricos, insumo para a IA",
+  "exemplo": null
+ },
+ {
+  "tabela": "equipes",
+  "problema": "nomes de unidades (USF V-842) e equipes (Equipe 001) são códigos sintéticos",
+  "linhas": 132,
+  "decisao": "substituídos por nomes fictícios de bairros do distrito; CNES e INE preservados como chave",
+  "exemplo": null
+ }
+]
