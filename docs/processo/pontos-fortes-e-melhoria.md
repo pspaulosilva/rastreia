@@ -8,7 +8,7 @@ RASTRE.IA · Equipe 4 · Projeto 5 · GTI · CESAR School · 2026.2. Versão 1.0
 |---|---|
 | Adaptação a imprevistos | A base sintética chegou dias antes do SR1 de 24/09 com 25 problemas de extração (ciclo em 4 formatos, 13 INEs sem cadastro, pontuações de 9999). Em vez de adiar o protótipo, a equipe escreveu o pipeline de saneamento, logou cada tratamento e demonstrou o MVP rodando sobre a base comum na própria apresentação. |
 | Colaboração | O Crazy 8's foi feito de forma assíncrona no FigJam por 4 integrantes em horários diferentes e consolidado na Tabela de Convergência; a reunião com o cliente em 10/09 foi conduzida por uma dupla e registrada em ata por outra, de modo que os 8 integrantes tiveram acesso às mesmas 9 questões e 4 decisões. |
-| Rigor técnico nas regras de negócio | Fomos a única equipe a aplicar a regra dos pesos do Eixo 3 por grupo (maior perda em pontos, não em percentual) e as faixas de zona do dicionário em telas conferidas número a número pelo professor nos Protótipos 3 e 4. |
+| Rigor técnico nas regras de negócio | As telas dos Protótipos 3 e 4 aplicam as regras do dicionário da base, como o cálculo da maior perda no Eixo 3 em pontos, com o peso do grupo de cada equipe, e as faixas de zona 850/700/550/400; na conferência do professor, os números coincidiram com a base comum. |
 | Identidade visual consistente | Deck, site e os 5 protótipos usam o mesmo sistema (nome RASTRE.IA, paleta e tipografia definidas no Figma), o que o professor registrou como ponto positivo no SR1. |
 | Qualidade das análises e ideias | A ideação produziu 25 ideias em 4 temas, 3 rodadas de brainwriting e SCAMPER, e a análise dos dados revelou um módulo não previsto (M0, saneamento e qualidade), incorporado à solução. |
 
