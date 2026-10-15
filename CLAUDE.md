@@ -13,7 +13,8 @@ Nome do produto: RASTRE.IA. Site da equipe: sites.google.com/cesar.school/rastre
 - `pipeline/preparar_dados.py`: pipeline completo sobre a base sintética. `--modo manual` (padrão, v1.1) gera o pacote do mvp5; `--modo dicionario` (v1.0) gera o dos mvp3/mvp4.
 - `pipeline/perfilar_base.py`: perfilamento, dispersão e figuras (gera `docs/perfilamento-base.md`).
 - `pipeline/verificar_prototipo5.py`: prova de que o Protótipo 5 usa o pipeline v1.1 (ver `docs/explicacao-prototipo-5.md`).
-- `app/mvp1.html` a `app/mvp5.html`: os 5 protótipos, HTML único com CSS/JS e dados embutidos em `<script id="rm-data">`. O mvp5 (mostrado no SR1) traz exatamente o `rastreia_data.json` do pipeline; `pipeline/embutir_dados.py` atualiza o bloco.
+- `app/mvp6.html`: **Protótipo 6, o atual** (https://ratreia.s3.us-east-1.amazonaws.com/mvp6/index.html). Pacote `rastreia_data_v6.json` (`--pacote v6`) com os dois modos; faixa e fonte em toda tela; qualidade com antes/depois; análise exploratória. Toda documentação nova deve citar o protótipo mais recente.
+- `app/mvp1.html` a `app/mvp5.html`: protótipos anteriores, HTML único com CSS/JS e dados embutidos em `<script id="rm-data">`. O mvp5 (mostrado no SR1) traz exatamente o `rastreia_data.json` do pipeline; `pipeline/embutir_dados.py` atualiza o bloco.
 - Os 5 CSVs da base sintética estão em `data/entrada/`; `data/saida/qualidade_dados.json` versionado.
 - `docs/processo/`: backlog, riscos, sprints, ferramentas, pontos fortes. `docs/capturas/`: telas.
 - Documentos de referência em `docs/`.
@@ -51,6 +52,6 @@ Saída esperada na base de 24/09: `modo=manual equipes=132 resultados=1363 eixo3
 
 ## Pendências priorizadas
 
-1. Registrar em cada tela a faixa de zona e os máximos usados, com a fonte; manter os dois modos no pipeline.
+1. Faixa oficial (Manual ou dicionário) a definir pelo professor/NIIMA; o mvp6 já mostra as duas.
 2. Sprint 1 (`docs/processo/sprints.md`): US07 configuração, US09 PDF, pesquisa de campo, cronograma com status.
 3. Sempre que o pipeline mudar: rodar `preparar_dados.py` (modos `manual` e `dicionario`), `perfilar_base.py`, `verificar_prototipo5.py`, `embutir_dados.py` e `capturar_telas.py`, nessa ordem.

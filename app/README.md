@@ -1,6 +1,6 @@
 # MVP / protótipos RASTRE.IA
 
-Cinco versões do protótipo, cada uma um único arquivo HTML (CSS e JS embutidos; a única
+Seis versões do protótipo; a versão atual é o **Protótipo 6** (`mvp6.html`). Cada uma é um único arquivo HTML (CSS e JS embutidos; a única
 dependência externa é a fonte do Google Fonts, opcional). Publicados em
 `s3://ratreia/mvpN/index.html` (us-east-1, leitura pública) e versionados aqui.
 
@@ -10,9 +10,18 @@ dependência externa é a fonte do Google Fonts, opcional). Publicados em
 | `mvp2.html` | Protótipo 2 | exemplo ilustrativo, sem a base comum | faixas do Manual de Avaliação |
 | `mvp3.html` | Protótipo 3 | base comum, pipeline v1.0 (só limpeza), em `<script id="rm-data">` | 850/700/550/400 e A80/B60/C60 (dicionário da base) |
 | `mvp4.html` | Protótipo 4 | base comum, pipeline v1.0 | idem |
-| `mvp5.html` | Protótipo 5 (mostrado no SR1) | base comum, pipeline v1.1 (realinhado ao Manual) | 900/800/600/400 e A40/B80/C80 (Manual) |
+| `mvp5.html` | Protótipo 5 (apresentado no SR1, 24/09) | base comum, pipeline v1.1 (realinhado ao Manual) | 900/800/600/400 e A40/B80/C80 (Manual) |
+| **`mvp6.html`** | **Protótipo 6 (atual, 15/10)** | base comum, `preparar_dados.py --pacote v6`: os dois conjuntos de parâmetros no mesmo pacote | Manual por padrão; Dicionário em Configurações ou `?faixas=dicionario` |
 
-`mvp3` a `mvp5` trazem o aviso "DADOS SIMULADOS", perfis de acesso (central, distrital,
+## Protótipo 6: ajustes pedidos na devolutiva do SR1
+
+- Toda tela registra, abaixo do título, as zonas e os máximos de bloco em uso, a fonte (Manual de Avaliação ou dicionário da base) e a versão do pipeline; Configurações troca o conjunto e a escolha fica salva.
+- No modo Dicionário, os números coincidem com os do Protótipo 3 corrigido (rede em 2026.2: média 677, 16 abaixo de 550, 9 quedas de 60+); no modo Manual, com os do Protótipo 5 (média 681, 27 abaixo de 600).
+- Qualidade dos dados: contagem antes e depois de cada tratamento, situação (corrigido, mantido e sinalizado, conferido), tipo, volume antes e depois por tabela com unicidade da chave, filtro por tabela e exportação do log em JSON.
+- Nova tela Análise exploratória (perfis central e distrital): média, mediana, desvio-padrão, quartis, histograma, boxplot (por distrito ou por grupo), dispersão Eixo 1 x Eixo 3 com correlação, completude da base crua e observações escritas.
+- Comparações com limiares sem arredondamento; cartão de quedas compara com o ciclo anterior.
+
+`mvp3` a `mvp6` trazem o aviso "DADOS SIMULADOS", perfis de acesso (central, distrital,
 local), alertas, planos de ação, resumo do quadrimestre, assistente e a tela "Qualidade dos
 dados" (perfis central e distrital).
 
@@ -30,6 +39,9 @@ python3 -m http.server 8080 --directory app
 ```bash
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida
 python pipeline/embutir_dados.py --html app/mvp5.html --dados data/saida/rastreia_data.json --verificar   # imprime "iguais"
+# Protótipo 6 (atual): pacote com os dois modos
+python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida --pacote v6
+python pipeline/embutir_dados.py --html app/mvp6.html --dados data/saida/rastreia_data_v6.json --verificar   # "iguais"
 # Protótipos 3 e 4 (pipeline v1.0, parâmetros do dicionário)
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida-dicionario --modo dicionario
 python pipeline/embutir_dados.py --html app/mvp3.html --dados data/saida-dicionario/rastreia_data.json --verificar   # "iguais"
@@ -44,6 +56,6 @@ portanto, rastreáveis até o script.
 
 ## Capturas
 
-`python pipeline/capturar_telas.py --tela qualidade --prototipos 3 5` gera
+`python pipeline/capturar_telas.py --tela qualidade --prototipos 6` gera
 `docs/capturas/prototipoN-qualidade.png` com Chromium (Playwright). Outras telas:
 `painel`, `alertas`, `planos`, `resumo`, `chat`, `config`.

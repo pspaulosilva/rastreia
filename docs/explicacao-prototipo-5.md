@@ -24,6 +24,9 @@ Cálculo do reescalonamento: B = 28,0 x 80/60 = 37,3; C = 23,7 x 80/60 = 31,6. O
 
 ## Decisão para o SR2
 
+Aplicada no **Protótipo 6** (`app/mvp6.html`): toda tela mostra a faixa, os máximos e a fonte em uso, e Configurações alterna entre Manual e dicionário sem trocar de arquivo.
+
+
 Até o professor esclarecer a divergência entre o Manual (5ª versão) e o dicionário da base, cada tela registra qual faixa e quais máximos usa, com a fonte. O pipeline mantém os dois modos, escolhidos por `--modo` em `preparar_dados.py` (parâmetros na constante `PARAMETROS`). Os dois reproduzem exatamente o pacote embutido em cada protótipo:
 
 ```bash

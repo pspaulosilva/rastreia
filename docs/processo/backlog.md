@@ -4,7 +4,7 @@ RASTRE.IA · Equipe 4 · Projeto 5 · GTI · CESAR School · 2026.2. Versão 1.0
 
 Origem: requisitos RF01 a RF11 do Documento de Requisitos (reunião com o cliente em 10/09/2026) e revisão de 24/09 sobre a base sintética. Personas: Renata (gestora central, NIIMA), Ana Lúcia (gestora distrital), Carlos Eduardo (gestor de unidade) e Anderson (técnico do cliente, responsável pela API).
 
-Prioridade MoSCoW herdada do requisito. Estimativa em pontos (Fibonacci). Status em 15/10: Feito = demonstrado no Protótipo 5 sobre a base sintética; Em andamento = parcialmente no protótipo; A fazer = SR2 em diante.
+Prioridade MoSCoW herdada do requisito. Estimativa em pontos (Fibonacci). Status em 15/10: Feito = demonstrado no Protótipo 5 ou 6 sobre a base sintética; Em andamento = parcialmente no protótipo; A fazer = SR2 em diante.
 
 ## E1. Ingestão e saneamento dos dados
 
@@ -23,7 +23,7 @@ Objetivo: receber os dados do Recife Monitora sem tocar na plataforma atual e en
 |---|---|---|---|---|---|---|
 | US05 | Como Ana Lúcia, quero ver pontuação e NPS já calculados por equipe, distrito e rede, para comparar o meu distrito com a rede. | Valores idênticos aos do Recife Monitora quando não há migração; agregação por equipe, distrito e rede; normalização por n_profissionais quando população ausente. | RF04, RNF06 | M | 5 | Feito |
 | US06 | Como Carlos Eduardo, quero ver a tendência da minha equipe entre ciclos (melhora, piora, estagnação), para saber se o plano de ação está funcionando. | Série de 11 ciclos; ciclos sem participação não aparecem como zero; rótulo de tendência por equipe. | RF10 | S | 3 | Feito |
-| US07 | Como Renata, quero que zonas, máximos de bloco e pesos por grupo fiquem em configuração, para ajustar quando o NIIMA decidir sem reescrever código. | Parâmetros em `ZONAS`, `BLOCOS` e tabela de pesos; tela Configurações registra fonte (Manual ou dicionário). | RNF08 | M | 3 | Em andamento |
+| US07 | Como Renata, quero que zonas, máximos de bloco e pesos por grupo fiquem em configuração, para ajustar quando o NIIMA decidir sem reescrever código. | Parâmetros em `ZONAS`, `BLOCOS` e tabela de pesos; tela Configurações registra fonte (Manual ou dicionário). | RNF08 | M | 3 | Feito (Protótipo 6) |
 
 ## E3. Resumo do quadrimestre
 
@@ -59,11 +59,11 @@ Objetivo: receber os dados do Recife Monitora sem tocar na plataforma atual e en
 | Épico | Stories | Pontos | Feito | Em andamento | A fazer |
 |---|---|---|---|---|---|
 | E1 Ingestão e saneamento | 4 | 26 | 1 | 1 | 2 |
-| E2 Pontuação e tendências | 3 | 11 | 2 | 1 | 0 |
+| E2 Pontuação e tendências | 3 | 11 | 3 | 0 | 0 |
 | E3 Resumo do quadrimestre | 2 | 11 | 1 | 0 | 1 |
 | E4 Alertas | 3 | 18 | 1 | 0 | 2 |
 | E5 Recomendações | 2 | 16 | 1 | 1 | 0 |
 | E6 Assistente | 2 | 26 | 0 | 1 | 1 |
-| Total | 16 | 108 | 6 | 4 | 6 |
+| Total | 16 | 108 | 7 | 3 | 6 |
 
-Ordem para o SR2: US07, US09, US11, US14, US03, US15. Quadro no Trello espelha este arquivo (uma lista por épico, um cartão por story).
+Ordem para o SR2: US09, US11, US14, US03, US15. Quadro no Trello espelha este arquivo (uma lista por épico, um cartão por story).

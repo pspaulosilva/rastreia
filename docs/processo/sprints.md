@@ -19,7 +19,7 @@ Objetivo: fechar a divergência de faixas e preparar a troca da fonte de dados.
 | Story | Dono | Critério de pronto |
 |---|---|---|
 | US07 parâmetros em configuração com fonte registrada | Paulo | Tela Configurações mostra faixa e máximos usados e a fonte |
-| US09 exportação do resumo em PDF | Pedro | PDF gerado a partir do Protótipo 5 com aviso de dados simulados |
+| US09 exportação do resumo em PDF | Pedro | PDF gerado a partir do Protótipo 6 com aviso de dados simulados |
 | Pesquisa de campo: questionário e jornada | Mirella, Lorena | Questionário aplicado ou repactuação registrada no cronograma |
 | Cronograma com trilha de dados e status | Maria Eduarda | Coluna de status e datas realizadas preenchidas |
 

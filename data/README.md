@@ -4,7 +4,7 @@
 para o SR1 (`equipes.csv`, `resultados_ciclos.csv`, `eixo3_indicadores.csv`,
 `nps_atributos.csv`, `planos_acao.csv`). LEIA-ME e dicionário em `docs/`.
 
-`data/saida/qualidade_dados.json` é versionado (log dos 25 tratamentos). As demais
+`data/saida/qualidade_dados.json` é versionado (log dos 25 tratamentos, com contagem antes em `linhas` e depois em `depois`). `rastreia_data_v6.json` (pacote do Protótipo 6) é gerado com `--pacote v6`. As demais
 saídas (`limpo/`, `rastreia_data.json`) são geradas pelo pipeline e não versionadas.
 
 ## Para rodar o pipeline

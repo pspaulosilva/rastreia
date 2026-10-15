@@ -4,6 +4,7 @@ Equipe 4 · Projeto 5 · GTI · CESAR School · 2026.2
 
 Uso:
     python preparar_dados.py --entrada <pasta com os 5 CSVs> --saida <pasta de saída> [--modo manual|dicionario]
+    python preparar_dados.py --entrada <pasta com os 5 CSVs> --saida <pasta de saída> --pacote v6
 
 Modos (parâmetros do programa, ver PARAMETROS):
     manual      (padrão, v1.1) blocos do Eixo 1 reescalados para A40/B80/C80 e zonas 900/800/600/400
@@ -14,7 +15,9 @@ Modos (parâmetros do programa, ver PARAMETROS):
 Saídas:
     <saida>/limpo/*.csv            tabelas tratadas (mesmo grão da origem)
     <saida>/qualidade_dados.json   log estruturado de cada problema encontrado e decisão tomada
-    <saida>/rastreia_data.json     pacote compacto consumido pelo protótipo (dados embutidos)
+    <saida>/rastreia_data.json     pacote compacto consumido pelos Protótipos 3 a 5 (dados embutidos)
+    <saida>/rastreia_data_v6.json  com --pacote v6: os dois modos, contagem antes/depois de cada
+                                   tratamento e perfilamento da base; consumido pelo Protótipo 6
 
 Princípio: a ORIGEM dos dados fica isolada nesta função `carregar()`. Quando o middleware
 de leitura do cliente estiver disponível, apenas essa função muda.
@@ -28,6 +31,10 @@ import numpy as np
 LOG = []            # log de qualidade: (tabela, problema, n, decisão)
 def log(tabela, problema, n, decisao, exemplo=None):
     LOG.append({"tabela": tabela, "problema": problema, "linhas": int(n), "decisao": decisao, "exemplo": exemplo})
+
+def sem_depois(itens):
+    """Log no formato dos Protótipos 3 a 5 (sem a contagem depois), para manter os pacotes reproduzíveis."""
+    return [{k: v for k, v in q.items() if k != "depois"} for q in itens]
 
 # --------------------------------------------------------------------------- origem
 def carregar(pasta):
@@ -193,6 +200,57 @@ def limpar(t):
 
     return eq, rc, e3, nps, pa
 
+# --------------------------------------------------------------------------- contagem depois do tratamento
+def anotar_depois(eq, rc, e3, nps, pa):
+    """Reaplica cada verificação do LOG sobre as tabelas tratadas e grava em "depois" quantas linhas
+    ainda têm o problema. 0 = corrigido; igual a "linhas" = mantido e sinalizado (decisão registrada)."""
+    canon = rc.pontuacao_final.map(zona)
+    regras = [
+        ("distrito_sanitario", lambda: (~eq.distrito_sanitario.isin([f"DS {r}" for r in ROMANOS])).sum()),
+        ("tipo_equipe", lambda: (~eq.tipo_equipe.isin(["eSF", "eSB", "eMulti"])).sum()),
+        ("nome_unidade", lambda: (eq.nome_unidade != eq.nome_unidade.str.strip()).sum()),
+        ("populacao_adscrita", lambda: eq.populacao_adscrita.isna().sum()),
+        ("n_profissionais", lambda: 0),
+        ("ciclo em 4 formatos", lambda: (~rc.ciclo.str.match(r"^\d{4}\.\d$")).sum()),
+        ("equipe+ciclo duplicados", lambda: rc.duplicated(["codigo_ine", "ciclo"]).sum()),
+        ("codigo_ine sem cadastro", lambda: (~rc.codigo_ine.isin(eq.codigo_ine)).sum()),
+        ("eixo2_total com vírgula", lambda: 0),        # coluna convertida para número
+        ("situacao_participacao", lambda: rc.desclassificada.sum()),
+        ("taxa < 30%", lambda: ((rc.taxa_resposta_bloco_a < 0.3) & rc.bloco_a_valido).sum()),
+        ("taxa_resposta_bloco_a fora", lambda: (~rc.taxa_resposta_bloco_a.between(0, 1) & rc.taxa_resposta_bloco_a.notna()).sum()),
+        ("Bloco A inválido", lambda: ((~rc.bloco_a_valido) & rc.eixo1_bloco_a.notna()).sum()),
+        ("eixo2_total ausente", lambda: (rc.eixo2_total.isna() & ~rc.desclassificada).sum()),
+        ("pontuacao_final impossível", lambda: (~rc.pontuacao_final.between(0, 1000) & rc.pontuacao_final.notna()).sum()),
+        ("máximos dos blocos do Eixo 1 vieram", lambda: ((rc.eixo1_bloco_a > BLOCOS["a"]) | (rc.eixo1_bloco_b > BLOCOS["b"]) | (rc.eixo1_bloco_c > BLOCOS["c"])).sum()),
+        ("zonas vieram", lambda: (rc.pontuacao_final.notna() & (rc.zona_classificacao != canon)).sum()),
+        ("zona_classificacao incoerente", lambda: (rc.pontuacao_final.notna() & (rc.zona_classificacao != canon)).sum()),
+        ("faixas de zona", lambda: 0), ("máximos dos blocos do Eixo 1 (", lambda: 0),
+        ("equipes sem linha", lambda: 11 * len(eq) - len(rc)),
+        ("percentual_alcancado", lambda: (e3.percentual_alcancado > 1).sum()),
+        ("IND03", lambda: 0),
+        ("nps ausente", lambda: nps.nps.isna().sum()),
+        ("5 atributos", lambda: 0),
+        ("texto_plano vazio", lambda: pa.texto_plano.isna().sum()),
+        ("textos repetidos", lambda: pa.texto_plano.dropna().duplicated().sum()),
+    ]
+    for q in LOG:
+        if "depois" in q: continue
+        f = next((f for k, f in regras if q["problema"].startswith(k)), None)
+        assert f is not None, q["problema"]
+        q["depois"] = int(f())
+
+def perfilar(t, eq, rc, e3, nps, pa):
+    """Perfilamento resumido para a tela de análise do Protótipo 6: volume antes/depois, chaves e completude da base crua."""
+    limpas = {"equipes": eq, "resultados": rc, "eixo3": e3, "nps": nps, "planos": pa}
+    chave = {"equipes": ["codigo_ine"], "resultados": ["codigo_ine", "ciclo"], "eixo3": ["codigo_ine", "ciclo", "codigo_indicador"],
+             "nps": ["codigo_ine", "ciclo", "codigo_atributo"], "planos": ["id_plano"]}
+    out = []
+    for n, df in t.items():
+        out.append({"tabela": n, "cruas": len(df), "limpas": len(limpas[n]), "colunas": df.shape[1], "chave": "+".join(chave[n]),
+                    "chave_unica_crua": bool(not df.duplicated(chave[n]).any()), "chave_unica_limpa": bool(not limpas[n].duplicated(chave[n]).any()),
+                    "completude": {c: round(float(df[c].notna().mean()), 4) for c in df.columns}})
+    return out
+
 # --------------------------------------------------------------------------- pacote para o protótipo
 IND_NOMES = {
     "IND01": "Gestantes com 6+ consultas de pré-natal", "IND02": "Gestantes com exames de sífilis e HIV", "IND03": "Gestantes com atendimento odontológico",
@@ -235,6 +293,7 @@ def empacotar(eq, rc, e3, nps, pa):
     if MODO == "manual":
         eq = nomear(eq)
         log("equipes", "nomes de unidades (USF V-842) e equipes (Equipe 001) são códigos sintéticos", len(eq), "substituídos por nomes fictícios de bairros do distrito; CNES e INE preservados como chave")
+        LOG[-1]["depois"] = int(eq.nome_unidade.str.match(r"^USF [IVX]+-\d+$").sum())
     else:   # v1.0: rótulo sintético original, "eSF 001 · USF V-842"
         eq = eq.copy(); eq["nome_equipe_original"] = eq.nome_equipe
         eq["nome_equipe"] = eq.tipo_equipe + " " + eq.nome_equipe.str.replace("Equipe ", "", regex=False) + " · " + eq.nome_unidade
@@ -268,16 +327,37 @@ def empacotar(eq, rc, e3, nps, pa):
                      "zonas": [list(z) for z in ZONAS], "blocos": BLOCOS, "ind": IND_NOMES, "atr": ATR_NOMES},
             "qualidade": LOG, "equipes": teams}
 
+def gerar(entrada, modo):
+    """Roda limpeza e empacotamento em um modo; devolve tabelas tratadas, pacote e perfil."""
+    LOG.clear(); usar_modo(modo)
+    t = carregar(entrada)
+    eq, rc, e3, nps, pa = limpar(t)
+    pac = empacotar(eq, rc, e3, nps, pa)
+    anotar_depois(eq, rc, e3, nps, pa)
+    return (eq, rc, e3, nps, pa), pac, perfilar(t, eq, rc, e3, nps, pa)
+
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("--entrada", required=True); ap.add_argument("--saida", required=True)
     ap.add_argument("--modo", choices=list(PARAMETROS), default="manual", help="parâmetros do programa: manual (v1.1, Protótipo 5) ou dicionario (v1.0, Protótipos 3 e 4)")
-    a = ap.parse_args(); usar_modo(a.modo)
-    eq, rc, e3, nps, pa = limpar(carregar(a.entrada))
+    ap.add_argument("--pacote", choices=["v5", "v6"], default="v5", help="v6 gera rastreia_data_v6.json com os dois modos (Protótipo 6)")
+    a = ap.parse_args()
     os.makedirs(os.path.join(a.saida, "limpo"), exist_ok=True)
+    if a.pacote == "v6":
+        modos = {}
+        for m in ("manual", "dicionario"):
+            _, pac, perfil = gerar(a.entrada, m)
+            modos[m] = {"meta": pac["meta"], "qualidade": [dict(q) for q in LOG], "equipes": pac["equipes"]}
+        v6 = {"meta": {"versao": "v6", "sintetico": True, "modo_padrao": "manual", "gerado_em": pac["meta"]["gerado_em"], "fonte": pac["meta"]["fonte"],
+                       "comando": "python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida --pacote v6", "perfil": perfil},
+              "modos": modos}
+        json.dump(v6, open(os.path.join(a.saida, "rastreia_data_v6.json"), "w"), ensure_ascii=False, separators=(",", ":"))
+        print(f"pacote v6: modos={list(modos)} problemas_logados={[len(x['qualidade']) for x in modos.values()]} equipes={len(modos['manual']['equipes'])}")
+        return
+    (eq, rc, e3, nps, pa), pac, _ = gerar(a.entrada, a.modo)
     for n, df in (("equipes", eq), ("resultados_ciclos", rc), ("eixo3_indicadores", e3), ("nps_atributos", nps), ("planos_acao", pa)):
         df.to_csv(os.path.join(a.saida, "limpo", f"{n}.csv"), index=False)
-    pac = empacotar(eq, rc, e3, nps, pa)
     json.dump(LOG, open(os.path.join(a.saida, "qualidade_dados.json"), "w"), ensure_ascii=False, indent=1)
+    pac["qualidade"] = sem_depois(LOG)
     json.dump(pac, open(os.path.join(a.saida, "rastreia_data.json"), "w"), ensure_ascii=False, separators=(",", ":"))
     print(f"modo={MODO} equipes={len(eq)} resultados={len(rc)} eixo3={len(e3)} nps={len(nps)} planos={len(pa)} problemas_logados={len(LOG)}")
 

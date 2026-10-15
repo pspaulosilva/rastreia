@@ -15,7 +15,7 @@ pipeline/perfilar_base.py        perfilamento escrito, medidas de dispersão e f
 pipeline/verificar_prototipo5.py conferência dos números do Protótipo 5 contra a base comum
 pipeline/embutir_dados.py        injeta rastreia_data.json no protótipo (fecha o ciclo pipeline -> tela)
 pipeline/capturar_telas.py       capturas das telas dos protótipos com Chromium
-app/                             os 5 protótipos (mvp1 a mvp5), HTML único com dados embutidos; ver app/README.md
+app/                             os 6 protótipos; o atual é app/mvp6.html (Protótipo 6); ver app/README.md
 data/                            entrada e saída do pipeline (CSVs da base comum versionados; ver data/README.md)
 docs/                            documentação; docs/processo/ (backlog, riscos, sprints, ferramentas); docs/capturas/
 requirements.txt                 dependências Python
@@ -51,6 +51,10 @@ python pipeline/perfilar_base.py  --entrada data/entrada --saida data/saida --do
 python pipeline/verificar_prototipo5.py --entrada data/entrada --saida data/saida
 python pipeline/embutir_dados.py --html app/mvp5.html --dados data/saida/rastreia_data.json --verificar   # "iguais"
 
+# Protótipo 6 (atual): pacote com os dois conjuntos de parâmetros
+python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida --pacote v6
+python pipeline/embutir_dados.py --html app/mvp6.html --dados data/saida/rastreia_data_v6.json --verificar   # "iguais"
+
 # Protótipos 3 e 4: mesmo pipeline com os parâmetros do dicionário da base (v1.0)
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida-dicionario --modo dicionario
 python pipeline/embutir_dados.py --html app/mvp3.html --dados data/saida-dicionario/rastreia_data.json --verificar   # "iguais"
@@ -73,11 +77,15 @@ modo=manual equipes=132 resultados=1363 eixo3=13294 nps=6815 planos=420 problema
 - `docs/perfilamento-base.md` - perfilamento (volume, tipos, chaves, completude, contagem antes/depois, 25 tratamentos, dispersão) e `docs/figuras/`.
 - `docs/explicacao-prototipo-5.md` - por que o Protótipo 5 difere dos Protótipos 3 e 4.
 - `docs/LEIA-ME-base-cliente.md` e `docs/DICIONARIO_DE_DADOS.md` - documentação original da base.
-- `docs/capturas/` - telas "Qualidade dos dados" dos Protótipos 3 e 5 (geradas por `capturar_telas.py`).
+- `docs/capturas/` - tela "Qualidade dos dados" do Protótipo 6 (atual) e, como histórico, dos Protótipos 3 e 5 (geradas por `capturar_telas.py`).
 - `docs/processo/` - backlog em épicos e user stories, riscos com probabilidade, impacto e cenários, registro de sprints, justificativa de ferramentas e método, pontos fortes e de melhoria.
 - `docs/tela-qualidade-dados.md` - especificação da tela "Qualidade dos dados" (o que ela deve mostrar, a partir de `qualidade_dados.json`).
 
+## Protótipo atual
+
+**Protótipo 6** (`app/mvp6.html`, publicado em https://ratreia.s3.us-east-1.amazonaws.com/mvp6/index.html). Reúne os ajustes da devolutiva do SR1: faixa, máximos e fonte registrados em toda tela, troca entre Manual e dicionário, log de qualidade com contagem antes e depois e tela de análise exploratória. Detalhes em `app/README.md`.
+
 ## Pendências em aberto
 
-- Registrar em cada tela a faixa de zona e os máximos de bloco usados, com a fonte (Manual ou dicionário), até o professor esclarecer a divergência.
+- Definição da faixa de zona oficial (Manual ou dicionário) pelo professor e pelo NIIMA; o Protótipo 6 mostra as duas.
 - Trocar a origem (`carregar()`) pelo middleware do cliente quando disponível (risco R1).
