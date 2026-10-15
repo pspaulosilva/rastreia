@@ -1,26 +1,34 @@
 # Explicação dos números do Protótipo 5
 
-Resposta ao "Primeiro ponto a esclarecer" da devolutiva do SR1. Verificação reproduzível em `pipeline/verificar_prototipo5.py`.
+Resposta ao "Primeiro ponto a esclarecer" da devolutiva do SR1. Verificação reproduzível em `pipeline/verificar_prototipo5.py`; relatório completo, gerado pelo script, em `docs/verificacao-prototipo-5.md`.
+
+## Resposta curta
+
+O Protótipo 5 (arquivo "Protótipo 5 - Mostrado no SR1.png") usou a mesma base comum e o mesmo pipeline dos Protótipos 3 e 4, mas na versão 1.1, que reescala os blocos do Eixo 1 dos máximos do dicionário (A 80, B 60, C 60) para os do Manual de Avaliação (A 40, B 80, C 80) e recompõe a pontuação final. Eixos 2 e 3 não mudam. Na média da rede, as mesmas 129 equipes pontuadas entram nos dois cálculos (os 13 INEs sem cadastro ficam fora); o reescalonamento sobe a média em 3,6 pontos e leva uma equipe para baixo de 600 (26 para 27). Por isso as equipes têm o mesmo INE, grupo, número de profissionais e indicadores da base, mas outra pontuação. A diferença está explicada em todas as 1.306 linhas pontuadas (132 equipes, 11 ciclos), não só nas equipes citadas.
+
+Os nomes também mudaram na v1.1: unidades e equipes ganharam nomes fictícios de bairros do distrito (por exemplo, "eSF Encruzilhada I" é a equipe "eSF 033 · USF II-792" da base); CNES e INE foram preservados.
 
 ## O que gerou cada protótipo
 
 | Protótipo | Fonte dos números | Blocos do Eixo 1 | Zonas |
 |---|---|---|---|
-| 3 e 4 | Base comum como veio (pipeline v1.0, só limpeza) | A 80, B 60, C 60 (dicionário) | 850/700/550/400 (dicionário) |
-| 5 (mostrado no SR1) | `rastreia_data.json` do pipeline v1.1 (24/09) | reescalados para A 40, B 80, C 80 (Manual de Avaliação, Quadro 4) | 900/800/600/400 (Manual, Quadro 10) |
+| 3 e 4 | Base comum como veio (pipeline v1.0, só limpeza), hoje `--modo dicionario` | A 80, B 60, C 60 (dicionário) | 850/700/550/400 (dicionário) |
+| 5 (mostrado no SR1) | `rastreia_data.json` do pipeline v1.1 (24/09), hoje `--modo manual` | reescalados para A 40, B 80, C 80 (Manual de Avaliação, Quadro 4) | 900/800/600/400 (Manual, Quadro 10) |
 
 A versão 1.1 do pipeline foi feita na véspera do SR1 para alinhar a base sintética ao Manual de Avaliação de Qualidade (v. 02.03.26), porque a base veio com máximos de bloco e faixas de zona diferentes do Manual (ver `docs/revisao-dados-sinteticos-e-arquitetura.md`, seção 3). O Protótipo 5 consumiu esse pacote. Os Protótipos 3 e 4 ficaram sobre a base sem o realinhamento. A equipe não registrou essa diferença de versão na entrega, e esse é o erro.
 
 ## Conferência número a número (ciclo 2026.2)
 
-| Equipe | Base crua | Realinhado (v1.1) | Protótipo 5 |
+As duas equipes citadas na devolutiva; as 12 equipes dos alertas críticos do Protótipo 5 estão na seção 1 de `docs/verificacao-prototipo-5.md`.
+
+| Equipe | Base (Protótipos 3 e 4) | Realinhado (v1.1) | Protótipo 5 |
 |---|---|---|---|
 | Encruzilhada I (INE 6000000032, grupo 1, 21 profissionais) | 405,0 = A 0 + B 28,0 + C 23,7 + E2 100,9 + E3 252,4 | 422,2 = A 0 + B 37,3 + C 31,6 + E2 100,9 + E3 252,4 | 422 |
 | Curado III (INE 6000000098, grupo 1, 18 profissionais) | 373,8 = A 0 + B 23,6 + C 29,7 + E2 62,6 + E3 257,9 | 391,6 = A 0 + B 31,5 + C 39,6 + E2 62,6 + E3 257,9 | 392 |
-| Média da rede (equipes pontuadas) | 678,3 (n = 133, inclui 4 INEs sem cadastro) | 680,8 (n = 129) | 681 |
+| Média da rede (equipes pontuadas) | 677,2 (n = 129) | 680,8 (n = 129) | 681 |
 | Equipes abaixo de 600 | 26 | 27 | 27 |
 
-Cálculo do reescalonamento: B = 28,0 x 80/60 = 37,3; C = 23,7 x 80/60 = 31,6. O Bloco A é 0 nas duas equipes porque a taxa de resposta ficou abaixo de 30% (0,2116 e 0,246), regra 1 do dicionário. Eixos 2 e 3 não mudam.
+Cálculo do reescalonamento: B = 28,0 x 80/60 = 37,3; C = 23,7 x 80/60 = 31,6. O Bloco A é 0 nas duas equipes porque a taxa de resposta ficou abaixo de 30% (0,2116 e 0,246), regra 1 do dicionário. Eixos 2 e 3 não mudam. Na média da rede, as mesmas 129 equipes pontuadas entram nos dois cálculos (os 13 INEs sem cadastro ficam fora); o reescalonamento sobe a média em 3,6 pontos e leva uma equipe para baixo de 600 (26 para 27).
 
 ## Decisão para o SR2
 
@@ -35,4 +43,5 @@ python pipeline/embutir_dados.py --html app/mvp5.html --dados data/saida/rastrei
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida-dicionario --modo dicionario      # v1.0, dicionário
 python pipeline/embutir_dados.py --html app/mvp3.html --dados data/saida-dicionario/rastreia_data.json --verificar   # iguais
 python pipeline/embutir_dados.py --html app/mvp4.html --dados data/saida-dicionario/rastreia_data.json --verificar   # iguais
+python pipeline/verificar_prototipo5.py --base data/saida-dicionario --p5 data/saida --md docs/verificacao-prototipo-5.md
 ```

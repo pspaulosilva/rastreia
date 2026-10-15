@@ -48,7 +48,6 @@ pip install -r requirements.txt
 # os 5 CSVs da base sintética comum já estão em data/entrada/
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida
 python pipeline/perfilar_base.py  --entrada data/entrada --saida data/saida --docs docs
-python pipeline/verificar_prototipo5.py --entrada data/entrada --saida data/saida
 python pipeline/embutir_dados.py --html app/mvp5.html --dados data/saida/rastreia_data.json --verificar   # "iguais"
 
 # Protótipo 6 (atual): pacote com os dois conjuntos de parâmetros
@@ -59,6 +58,9 @@ python pipeline/embutir_dados.py --html app/mvp6.html --dados data/saida/rastrei
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida-dicionario --modo dicionario
 python pipeline/embutir_dados.py --html app/mvp3.html --dados data/saida-dicionario/rastreia_data.json --verificar   # "iguais"
 python pipeline/embutir_dados.py --html app/mvp4.html --dados data/saida-dicionario/rastreia_data.json --verificar   # "iguais"
+
+# Protótipo 5: diferença em relação à base explicada linha a linha
+python pipeline/verificar_prototipo5.py --base data/saida-dicionario --p5 data/saida --md docs/verificacao-prototipo-5.md
 ```
 
 Os pacotes de dados embutidos nos Protótipos 3, 4 (`--modo dicionario`) e 5 (`--modo manual`, padrão) são idênticos aos que o pipeline gera a partir dos CSVs; todo número das telas é rastreável ao script.
@@ -75,7 +77,7 @@ modo=manual equipes=132 resultados=1363 eixo3=13294 nps=6815 planos=420 problema
 - `docs/requisitos.md` - requisitos funcionais e não funcionais (reunião de imersão, 10/09).
 - `docs/revisao-dados-sinteticos-e-arquitetura.md` - perfilamento da base, problemas encontrados, divergências com o Manual de Avaliação e arquitetura da solução.
 - `docs/perfilamento-base.md` - perfilamento (volume, tipos, chaves, completude, contagem antes/depois, 25 tratamentos, dispersão) e `docs/figuras/`.
-- `docs/explicacao-prototipo-5.md` - por que o Protótipo 5 difere dos Protótipos 3 e 4.
+- `docs/explicacao-prototipo-5.md` - por que o Protótipo 5 difere dos Protótipos 3 e 4; `docs/verificacao-prototipo-5.md` - conferência linha a linha gerada pelo script.
 - `docs/LEIA-ME-base-cliente.md` e `docs/DICIONARIO_DE_DADOS.md` - documentação original da base.
 - `docs/capturas/` - tela "Qualidade dos dados" do Protótipo 6 (atual) e, como histórico, dos Protótipos 3 e 5 (geradas por `capturar_telas.py`).
 - `docs/processo/` - backlog em épicos e user stories, riscos com probabilidade, impacto e cenários, registro de sprints, justificativa de ferramentas e método, pontos fortes e de melhoria.
