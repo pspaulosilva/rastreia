@@ -58,4 +58,5 @@ portanto, rastreáveis até o script.
 
 `python pipeline/capturar_telas.py --tela qualidade --prototipos 6` gera
 `docs/capturas/prototipoN-qualidade.png` com Chromium (Playwright). Outras telas:
-`painel`, `alertas`, `planos`, `resumo`, `chat`, `config`.
+`painel`, `alertas`, `planos`, `resumo`, `chat`, `analise`, `config`. Todas as do Protótipo 6 já estão em `docs/capturas/`
+(`--sufixo=-dicionario --query "?faixas=dicionario"` captura no modo dicionário).

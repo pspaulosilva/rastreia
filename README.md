@@ -79,7 +79,7 @@ modo=manual equipes=132 resultados=1363 eixo3=13294 nps=6815 planos=420 problema
 - `docs/perfilamento-base.md` - perfilamento (volume, tipos, chaves, completude, contagem antes/depois, 25 tratamentos, dispersão) e `docs/figuras/`.
 - `docs/explicacao-prototipo-5.md` - por que o Protótipo 5 difere dos Protótipos 3 e 4; `docs/verificacao-prototipo-5.md` - conferência linha a linha gerada pelo script.
 - `docs/LEIA-ME-base-cliente.md` e `docs/DICIONARIO_DE_DADOS.md` - documentação original da base.
-- `docs/capturas/` - tela "Qualidade dos dados" do Protótipo 6 (atual) e, como histórico, dos Protótipos 3 e 5 (geradas por `capturar_telas.py`).
+- `docs/capturas/` - todas as telas do Protótipo 6 (atual): `prototipo6-painel`, `-alertas`, `-planos`, `-resumo`, `-chat`, `-qualidade`, `-analise`, `-config`, e painel e qualidade também no modo dicionário (`-dicionario`); como histórico, a tela "Qualidade dos dados" dos Protótipos 3 e 5. Geradas por `capturar_telas.py`.
 - `docs/processo/` - backlog em épicos e user stories, riscos com probabilidade, impacto e cenários, registro de sprints, justificativa de ferramentas e método, pontos fortes e de melhoria. Versões em PDF em `docs/processo/pdf/`, geradas por `python pipeline/exportar_pdf.py`.
 - `docs/tela-qualidade-dados.md` - especificação da tela "Qualidade dos dados" (o que ela deve mostrar, a partir de `qualidade_dados.json`).
 
