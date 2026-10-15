@@ -80,7 +80,7 @@ modo=manual equipes=132 resultados=1363 eixo3=13294 nps=6815 planos=420 problema
 - `docs/explicacao-prototipo-5.md` - por que o Protótipo 5 difere dos Protótipos 3 e 4; `docs/verificacao-prototipo-5.md` - conferência linha a linha gerada pelo script.
 - `docs/LEIA-ME-base-cliente.md` e `docs/DICIONARIO_DE_DADOS.md` - documentação original da base.
 - `docs/capturas/` - tela "Qualidade dos dados" do Protótipo 6 (atual) e, como histórico, dos Protótipos 3 e 5 (geradas por `capturar_telas.py`).
-- `docs/processo/` - backlog em épicos e user stories, riscos com probabilidade, impacto e cenários, registro de sprints, justificativa de ferramentas e método, pontos fortes e de melhoria.
+- `docs/processo/` - backlog em épicos e user stories, riscos com probabilidade, impacto e cenários, registro de sprints, justificativa de ferramentas e método, pontos fortes e de melhoria. Versões em PDF em `docs/processo/pdf/`, geradas por `python pipeline/exportar_pdf.py`.
 - `docs/tela-qualidade-dados.md` - especificação da tela "Qualidade dos dados" (o que ela deve mostrar, a partir de `qualidade_dados.json`).
 
 ## Protótipo atual
