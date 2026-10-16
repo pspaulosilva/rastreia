@@ -39,7 +39,7 @@ leitura do cliente estiver disponível, só essa função muda.
 
 ## Reprodutibilidade
 
-Sem caminhos absolutos, sem passos manuais não registrados.
+Sem caminhos absolutos, sem passos manuais não registrados. Todo arquivo é lido e gravado em UTF-8, inclusive no Windows (sem precisar de `PYTHONUTF8`).
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
@@ -68,19 +68,21 @@ Os pacotes de dados embutidos nos Protótipos 3, 4 (`--modo dicionario`) e 5 (`-
 Saída esperada do primeiro comando (contagens da base sintética de 24/09/2026):
 
 ```
-modo=manual equipes=132 resultados=1363 eixo3=13294 nps=6815 planos=420 problemas_logados=25
+modo=manual equipes=132 resultados=1363 eixo3=12738 nps=6530 planos=420 problemas_logados=28
 ```
+
+São 28 tratamentos: os 25 do SR1 e 3 acrescentados depois da devolutiva final (campo `desde: "SR2"`): exclusão das linhas de Eixo 3 (556) e NPS (285) dos ciclos em que a equipe foi desclassificada e planos com texto "-" (6) tratados como vazios. Os pacotes dos Protótipos 3 a 5 seguem idênticos aos do SR1; só os dados limpos, o log e o pacote do Protótipo 6 mudam.
 
 ## Documentação
 
 - `CLAUDE.md` - contexto do projeto para trabalhar neste repositório com o Claude Code.
 - `docs/requisitos.md` - requisitos funcionais e não funcionais (reunião de imersão, 10/09).
 - `docs/revisao-dados-sinteticos-e-arquitetura.md` - perfilamento da base, problemas encontrados, divergências com o Manual de Avaliação e arquitetura da solução.
-- `docs/perfilamento-base.md` - perfilamento (volume, tipos, chaves, completude, contagem antes/depois, 25 tratamentos, dispersão) e `docs/figuras/`.
+- `docs/perfilamento-base.md` - perfilamento (volume, tipos, chaves, completude, contagem antes/depois, 28 tratamentos, dispersão) e `docs/figuras/`.
 - `docs/explicacao-prototipo-5.md` - por que o Protótipo 5 difere dos Protótipos 3 e 4; `docs/verificacao-prototipo-5.md` - conferência linha a linha gerada pelo script.
 - `docs/LEIA-ME-base-cliente.md` e `docs/DICIONARIO_DE_DADOS.md` - documentação original da base.
 - `docs/capturas/` - todas as telas do Protótipo 6 (atual): `prototipo6-painel`, `-alertas`, `-planos`, `-resumo`, `-chat`, `-qualidade`, `-analise`, `-config`, e painel e qualidade também no modo dicionário (`-dicionario`); como histórico, a tela "Qualidade dos dados" dos Protótipos 3 e 5. Geradas por `capturar_telas.py`.
-- `docs/processo/` - backlog em épicos e user stories, riscos com probabilidade, impacto e cenários, registro de sprints, justificativa de ferramentas e método, pontos fortes e de melhoria. Versões em PDF em `docs/processo/pdf/`, geradas por `python pipeline/exportar_pdf.py`.
+- `docs/processo/` - backlog em épicos e user stories, riscos com probabilidade, impacto e cenários, registro de sprints (com as lições da devolutiva final), modelo de ata em `docs/processo/atas/`, justificativa de ferramentas e método, pontos fortes e de melhoria. Versões em PDF em `docs/processo/pdf/`, geradas por `python pipeline/exportar_pdf.py`.
 - `docs/tela-qualidade-dados.md` - especificação da tela "Qualidade dos dados" (o que ela deve mostrar, a partir de `qualidade_dados.json`).
 
 ## Protótipo atual

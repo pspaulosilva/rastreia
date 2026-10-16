@@ -29,12 +29,15 @@ import pandas as pd
 import numpy as np
 
 LOG = []            # log de qualidade: (tabela, problema, n, decisão)
-def log(tabela, problema, n, decisao, exemplo=None):
-    LOG.append({"tabela": tabela, "problema": problema, "linhas": int(n), "decisao": decisao, "exemplo": exemplo})
+def log(tabela, problema, n, decisao, exemplo=None, desde=None):
+    q = {"tabela": tabela, "problema": problema, "linhas": int(n), "decisao": decisao, "exemplo": exemplo}
+    if desde: q["desde"] = desde     # tratamento acrescentado depois do SR1 (devolutiva final)
+    LOG.append(q)
 
 def sem_depois(itens):
-    """Log no formato dos Protótipos 3 a 5 (sem a contagem depois), para manter os pacotes reproduzíveis."""
-    return [{k: v for k, v in q.items() if k != "depois"} for q in itens]
+    """Log no formato dos Protótipos 3 a 5 (sem a contagem depois e sem os tratamentos posteriores ao SR1),
+    para manter os pacotes reproduzíveis."""
+    return [{k: v for k, v in q.items() if k != "depois"} for q in itens if "desde" not in q]
 
 # --------------------------------------------------------------------------- origem
 def carregar(pasta):
@@ -184,12 +187,20 @@ def limpar(t):
     e3["pontos_obtidos"] = (e3.percentual_alcancado * e3.peso_maximo).round(1)
     e3 = e3[e3.codigo_ine.isin(eq.codigo_ine)].drop_duplicates(["codigo_ine", "ciclo", "codigo_indicador"])
     log("eixo3", "IND03 e IND08 (odontologia) não se aplicam ao grupo 4; pesos variam por grupo", 0, "recomendações só citam indicadores aplicáveis ao grupo da equipe (regra 3)")
+    desc = pd.MultiIndex.from_frame(rc.loc[rc.desclassificada, ["codigo_ine", "ciclo"]])
+    em_desc = lambda df: pd.MultiIndex.from_frame(df[["codigo_ine", "ciclo"]]).isin(desc)
+    log("eixo3", "linhas de indicador em ciclos em que a equipe foi desclassificada", em_desc(e3).sum(),
+        "excluídas dos dados limpos: desclassificação é ausência de dado (regra 2)", desde="SR2")
+    e3 = e3[~em_desc(e3)]
 
     # ---- nps
     nps["nps"] = num(nps.nps); nps["n_respondentes"] = num(nps.n_respondentes)
     log("nps", "nps ausente em atributos isolados", nps.nps.isna().sum(), "mantido nulo; média do ciclo ignora o atributo ausente")
     log("nps", "5 atributos (acolhimento, espera, resolutividade, estrutura, vínculo) e conversão eixo2 = média NPS + 100, diferentes do Manual (6 perguntas, Quadro 7 por faixas)", 0, "mantido o esquema dos dados como simplificação da base sintética; conversão oficial (Quadro 7) entra com os dados reais" if MODO == "manual" else "adotado o esquema dos dados; divergência levada ao cliente")
     nps = nps[nps.codigo_ine.isin(eq.codigo_ine)].drop_duplicates(["codigo_ine", "ciclo", "codigo_atributo"])
+    log("nps", "linhas de atributo em ciclos em que a equipe foi desclassificada", em_desc(nps).sum(),
+        "excluídas dos dados limpos: desclassificação é ausência de dado (regra 2)", desde="SR2")
+    nps = nps[~em_desc(nps)]
 
     # ---- planos
     vazio = pa.texto_plano.fillna("").str.strip().eq("")
@@ -197,6 +208,9 @@ def limpar(t):
     pa.loc[vazio, "texto_plano"] = None
     for c in ["dim_governanca", "dim_smart", "dim_viabilidade", "nivel_maturidade"]: pa[c] = num(pa[c]).astype(int)
     log("planos", "textos repetidos (modelos padrão)", pa.texto_plano.dropna().duplicated().sum(), "mantidos; indício de planos genéricos, insumo para a IA")
+    pa["texto_traco"] = pa.texto_plano.fillna("").str.strip().eq("-")
+    log("planos", "texto_plano só com o marcador '-'", pa.texto_traco.sum(), "tratado como vazio: marcador 'sem texto'; excluído da análise de linguagem", desde="SR2")
+    pa.loc[pa.texto_traco, "texto_plano"] = None
 
     return eq, rc, e3, nps, pa
 
@@ -228,10 +242,13 @@ def anotar_depois(eq, rc, e3, nps, pa):
         ("equipes sem linha", lambda: 11 * len(eq) - len(rc)),
         ("percentual_alcancado", lambda: (e3.percentual_alcancado > 1).sum()),
         ("IND03", lambda: 0),
+        ("linhas de indicador em ciclos", lambda: e3.set_index(["codigo_ine", "ciclo"]).index.isin(rc.loc[rc.desclassificada].set_index(["codigo_ine", "ciclo"]).index).sum()),
+        ("linhas de atributo em ciclos", lambda: nps.set_index(["codigo_ine", "ciclo"]).index.isin(rc.loc[rc.desclassificada].set_index(["codigo_ine", "ciclo"]).index).sum()),
         ("nps ausente", lambda: nps.nps.isna().sum()),
         ("5 atributos", lambda: 0),
         ("texto_plano vazio", lambda: pa.texto_plano.isna().sum()),
         ("textos repetidos", lambda: pa.texto_plano.dropna().duplicated().sum()),
+        ("texto_plano só com o marcador", lambda: pa.texto_plano.fillna("").str.strip().eq("-").sum()),
     ]
     for q in LOG:
         if "depois" in q: continue
@@ -289,7 +306,8 @@ def nomear(eq):
     eq["nome_equipe"] = [f"{t} {b}" + (f" {ROM[s - 1]}" if m > 1 else "") for t, b, s, m in zip(eq.tipo_equipe, bairro, eq._seq, tot)]
     return eq.drop(columns="_seq")
 
-def empacotar(eq, rc, e3, nps, pa):
+def empacotar(eq, rc, e3, nps, pa, sr1=False):
+    """sr1=True: pacote dos Protótipos 3 a 5, idêntico ao do SR1 (planos com "-" mantêm o texto original)."""
     if MODO == "manual":
         eq = nomear(eq)
         log("equipes", "nomes de unidades (USF V-842) e equipes (Equipe 001) são códigos sintéticos", len(eq), "substituídos por nomes fictícios de bairros do distrito; CNES e INE preservados como chave")
@@ -317,7 +335,7 @@ def empacotar(eq, rc, e3, nps, pa):
                 for _, i in npg[k].iterrows(): at[i.codigo_atributo] = [r(i.nps), int(i.n_respondentes)]
             res[x.ciclo] = {"a": r(x.eixo1_bloco_a), "b": r(x.eixo1_bloco_b), "c": r(x.eixo1_bloco_c), "e1": r(x.eixo1_total), "e2": r(x.eixo2_total), "e3": r(x.eixo3_total),
                             "f": r(x.pontuacao_final), "z": x.zona_classificacao, "tx": r(x.taxa_resposta_bloco_a), "av": bool(x.bloco_a_valido), "e2r": bool(x.eixo2_reconstruido), "ind": ind, "atr": at}
-        planos = [{"id": p.id_plano, "c": p.ciclo, "t": None if pd.isna(p.texto_plano) else p.texto_plano, "g": int(p.dim_governanca), "s": int(p.dim_smart), "v": int(p.dim_viabilidade), "n": int(p.nivel_maturidade), "r": p.rotulo_maturidade}
+        planos = [{"id": p.id_plano, "c": p.ciclo, "t": "-" if sr1 and p.texto_traco else None if pd.isna(p.texto_plano) else p.texto_plano, "g": int(p.dim_governanca), "s": int(p.dim_smart), "v": int(p.dim_viabilidade), "n": int(p.nivel_maturidade), "r": p.rotulo_maturidade}
                   for _, p in pag.get(ine, pd.DataFrame()).iterrows()]
         equipe = {"ine": ine, "cnes": q.codigo_cnes, "usf": q.nome_unidade, "nome": q.nome_equipe, "eq": q.nome_equipe_original}
         if MODO == "manual": equipe["cod"] = q.nome_equipe_original.replace("Equipe ", "")
@@ -327,12 +345,12 @@ def empacotar(eq, rc, e3, nps, pa):
                      "zonas": [list(z) for z in ZONAS], "blocos": BLOCOS, "ind": IND_NOMES, "atr": ATR_NOMES},
             "qualidade": LOG, "equipes": teams}
 
-def gerar(entrada, modo):
+def gerar(entrada, modo, sr1=False):
     """Roda limpeza e empacotamento em um modo; devolve tabelas tratadas, pacote e perfil."""
     LOG.clear(); usar_modo(modo)
     t = carregar(entrada)
     eq, rc, e3, nps, pa = limpar(t)
-    pac = empacotar(eq, rc, e3, nps, pa)
+    pac = empacotar(eq, rc, e3, nps, pa, sr1)
     anotar_depois(eq, rc, e3, nps, pa)
     return (eq, rc, e3, nps, pa), pac, perfilar(t, eq, rc, e3, nps, pa)
 
@@ -350,15 +368,15 @@ def main():
         v6 = {"meta": {"versao": "v6", "sintetico": True, "modo_padrao": "manual", "gerado_em": pac["meta"]["gerado_em"], "fonte": pac["meta"]["fonte"],
                        "comando": "python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida --pacote v6", "perfil": perfil},
               "modos": modos}
-        json.dump(v6, open(os.path.join(a.saida, "rastreia_data_v6.json"), "w"), ensure_ascii=False, separators=(",", ":"))
+        json.dump(v6, open(os.path.join(a.saida, "rastreia_data_v6.json"), "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
         print(f"pacote v6: modos={list(modos)} problemas_logados={[len(x['qualidade']) for x in modos.values()]} equipes={len(modos['manual']['equipes'])}")
         return
-    (eq, rc, e3, nps, pa), pac, _ = gerar(a.entrada, a.modo)
+    (eq, rc, e3, nps, pa), pac, _ = gerar(a.entrada, a.modo, sr1=True)
     for n, df in (("equipes", eq), ("resultados_ciclos", rc), ("eixo3_indicadores", e3), ("nps_atributos", nps), ("planos_acao", pa)):
-        df.to_csv(os.path.join(a.saida, "limpo", f"{n}.csv"), index=False)
-    json.dump(LOG, open(os.path.join(a.saida, "qualidade_dados.json"), "w"), ensure_ascii=False, indent=1)
+        df.to_csv(os.path.join(a.saida, "limpo", f"{n}.csv"), index=False, encoding="utf-8")
+    json.dump(LOG, open(os.path.join(a.saida, "qualidade_dados.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     pac["qualidade"] = sem_depois(LOG)
-    json.dump(pac, open(os.path.join(a.saida, "rastreia_data.json"), "w"), ensure_ascii=False, separators=(",", ":"))
+    json.dump(pac, open(os.path.join(a.saida, "rastreia_data.json"), "w", encoding="utf-8"), ensure_ascii=False, separators=(",", ":"))
     print(f"modo={MODO} equipes={len(eq)} resultados={len(rc)} eixo3={len(e3)} nps={len(nps)} planos={len(pa)} problemas_logados={len(LOG)}")
 
 if __name__ == "__main__":

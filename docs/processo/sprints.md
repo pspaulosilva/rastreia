@@ -58,6 +58,15 @@ Revisão (15/10): entregue no repositório `pspaulosilva/rastreia` e no Drive. P
 
 Retrospectiva: o que faltou no SR1 já existia, mas não estava na pasta. Acordo: nenhuma apresentação sem o material técnico no Drive no mesmo dia.
 
+## Lições da devolutiva final do SR1 (16/10)
+
+| Lição | Ação | Situação |
+|---|---|---|
+| Ritos sem registro feito na hora (Proc. Definido) | Ata de toda reunião no mesmo dia em `atas/`; planejamento, revisão e retrospectiva de cada sprint aqui, na data da cerimônia | Modelo criado em 16/10; vale desde a Sprint 1 |
+| Dados limpos com linhas que a regra exclui (Limpeza) | Pipeline exclui Eixo 3 (556 linhas) e NPS (285) dos ciclos desclassificados e trata os 6 planos com texto "-" como vazios | Feito em 16/10; log com 28 tratamentos |
+| README quebrava no Windows (Reprodutibilidade) | `encoding="utf-8"` em toda gravação de arquivo do pipeline | Feito em 16/10 |
+| Trilha de dados e pesquisa de campo fora do cronograma (Atividade, Prazos) | Cronograma revisado a cada sprint; pesquisa de campo realizada ou repactuada com motivo | Em andamento na Sprint 1 |
+
 ## Sprint 1: 16/10 a 29/10
 
 Objetivo: fechar a divergência de faixas e preparar a troca da fonte de dados.
@@ -68,6 +77,7 @@ Objetivo: fechar a divergência de faixas e preparar a troca da fonte de dados.
 | US09 exportação do resumo em PDF | Pedro | PDF gerado a partir do Protótipo 6 com aviso de dados simulados |
 | Pesquisa de campo: questionário e jornada | Mirella, Lorena | Questionário aplicado ou repactuação registrada no cronograma |
 | Cronograma com trilha de dados e status | Maria Eduarda | Coluna de status e datas realizadas preenchidas |
+| Atas das reuniões da sprint | quem conduzir cada reunião | Uma ata por reunião em `atas/`, no mesmo dia |
 
 Revisão: (preencher em 29/10)
 

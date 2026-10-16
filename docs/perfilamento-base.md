@@ -8,8 +8,8 @@ Gerado por `pipeline/perfilar_base.py`. Base 100% sintética (DADOS SIMULADOS).
 |---|---|---|---|---|---|
 | equipes | codigo_ine | 132 | 132 | 0 | 9 |
 | resultados_ciclos | codigo_ine/ciclo | 1392 | 1363 | 29 | 13 |
-| eixo3_indicadores | codigo_ine/ciclo/codigo_indicador | 13294 | 13294 | 0 | 7 |
-| nps_atributos | codigo_ine/ciclo/codigo_atributo | 6815 | 6815 | 0 | 6 |
+| eixo3_indicadores | codigo_ine/ciclo/codigo_indicador | 13294 | 12738 | 556 | 7 |
+| nps_atributos | codigo_ine/ciclo/codigo_atributo | 6815 | 6530 | 285 | 6 |
 | planos_acao | id_plano | 420 | 420 | 0 | 9 |
 
 ## 2. Tipos, completude e domínio por coluna (base crua)
@@ -119,11 +119,14 @@ Contagem = linhas afetadas antes do tratamento; a contagem total após limpeza e
 | 18 | resultados | equipes sem linha em alguns ciclos (adesão voluntária) | 89 | ausência tratada como 'não participou', não como queda |
 | 19 | eixo3 | percentual_alcancado em escala 0-100 em vez de 0-1 | 380 | dividido por 100; pontos_obtidos conferidos = pct x peso |
 | 20 | eixo3 | IND03 e IND08 (odontologia) não se aplicam ao grupo 4; pesos variam por grupo | 0 | recomendações só citam indicadores aplicáveis ao grupo da equipe (regra 3) |
-| 21 | nps | nps ausente em atributos isolados | 260 | mantido nulo; média do ciclo ignora o atributo ausente |
-| 22 | nps | 5 atributos (acolhimento, espera, resolutividade, estrutura, vínculo) e conversão eixo2 = média NPS + 100, diferentes do Manual (6 perguntas, Quadro 7 por faixas) | 0 | mantido o esquema dos dados como simplificação da base sintética; conversão oficial (Quadro 7) entra com os dados reais |
-| 23 | planos | texto_plano vazio ou nulo | 12 | mantido com marcador 'sem texto'; excluído da análise de linguagem |
-| 24 | planos | textos repetidos (modelos padrão) | 194 | mantidos; indício de planos genéricos, insumo para a IA |
-| 25 | equipes | nomes de unidades (USF V-842) e equipes (Equipe 001) são códigos sintéticos | 132 | substituídos por nomes fictícios de bairros do distrito; CNES e INE preservados como chave |
+| 21 | eixo3 | linhas de indicador em ciclos em que a equipe foi desclassificada | 556 | excluídas dos dados limpos: desclassificação é ausência de dado (regra 2) |
+| 22 | nps | nps ausente em atributos isolados | 260 | mantido nulo; média do ciclo ignora o atributo ausente |
+| 23 | nps | 5 atributos (acolhimento, espera, resolutividade, estrutura, vínculo) e conversão eixo2 = média NPS + 100, diferentes do Manual (6 perguntas, Quadro 7 por faixas) | 0 | mantido o esquema dos dados como simplificação da base sintética; conversão oficial (Quadro 7) entra com os dados reais |
+| 24 | nps | linhas de atributo em ciclos em que a equipe foi desclassificada | 285 | excluídas dos dados limpos: desclassificação é ausência de dado (regra 2) |
+| 25 | planos | texto_plano vazio ou nulo | 12 | mantido com marcador 'sem texto'; excluído da análise de linguagem |
+| 26 | planos | textos repetidos (modelos padrão) | 194 | mantidos; indício de planos genéricos, insumo para a IA |
+| 27 | planos | texto_plano só com o marcador '-' | 6 | tratado como vazio: marcador 'sem texto'; excluído da análise de linguagem |
+| 28 | equipes | nomes de unidades (USF V-842) e equipes (Equipe 001) são códigos sintéticos | 132 | substituídos por nomes fictícios de bairros do distrito; CNES e INE preservados como chave |
 
 ## 5. Medidas de dispersão da pontuação final (base limpa, equipes pontuadas)
 

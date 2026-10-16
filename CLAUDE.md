@@ -37,7 +37,7 @@ pip install -r requirements.txt
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida
 ```
 
-Saída esperada na base de 24/09: `modo=manual equipes=132 resultados=1363 eixo3=13294 nps=6815 planos=420 problemas_logados=25`.
+Saída esperada na base de 24/09: `modo=manual equipes=132 resultados=1363 eixo3=12738 nps=6530 planos=420 problemas_logados=28` (25 tratamentos do SR1 e 3 marcados `desde: "SR2"`, que não entram nos pacotes dos Protótipos 3 a 5).
 
 ## Convenções
 
@@ -46,7 +46,10 @@ Saída esperada na base de 24/09: `modo=manual equipes=132 resultados=1363 eixo3
 - Português nos nomes, comentários, commits e documentação.
 - Sem caminhos absolutos. Sem passos manuais não registrados. Toda dependência em `requirements.txt`.
 - Todo número exibido em tela deve ser rastreável a uma função do pipeline.
-- Todo tratamento de dado novo entra no `LOG` com problema, contagem e decisão.
+- Todo tratamento de dado novo entra no `LOG` com problema, contagem e decisão (e `desde=` quando posterior ao SR1).
+- Dados limpos excluem tudo o que a regra de negócio exclui das análises (ex.: Eixo 3 e NPS de ciclos desclassificados).
+- Todo `open()` e `to_csv()` com `encoding="utf-8"` (o README precisa rodar no Windows).
+- Reuniões e sprints registradas no mesmo dia (`docs/processo/atas/`, `sprints.md`).
 - Toda tela derivada da base sintética exibe "DADOS SIMULADOS".
 - Não usar travessão ("-") em documentos gerados.
 

@@ -201,12 +201,21 @@
   "depois": 0
  },
  {
+  "tabela": "eixo3",
+  "problema": "linhas de indicador em ciclos em que a equipe foi desclassificada",
+  "linhas": 556,
+  "decisao": "excluídas dos dados limpos: desclassificação é ausência de dado (regra 2)",
+  "exemplo": null,
+  "desde": "SR2",
+  "depois": 0
+ },
+ {
   "tabela": "nps",
   "problema": "nps ausente em atributos isolados",
   "linhas": 260,
   "decisao": "mantido nulo; média do ciclo ignora o atributo ausente",
   "exemplo": null,
-  "depois": 260
+  "depois": 248
  },
  {
   "tabela": "nps",
@@ -217,12 +226,21 @@
   "depois": 0
  },
  {
+  "tabela": "nps",
+  "problema": "linhas de atributo em ciclos em que a equipe foi desclassificada",
+  "linhas": 285,
+  "decisao": "excluídas dos dados limpos: desclassificação é ausência de dado (regra 2)",
+  "exemplo": null,
+  "desde": "SR2",
+  "depois": 0
+ },
+ {
   "tabela": "planos",
   "problema": "texto_plano vazio ou nulo",
   "linhas": 12,
   "decisao": "mantido com marcador 'sem texto'; excluído da análise de linguagem",
   "exemplo": null,
-  "depois": 12
+  "depois": 18
  },
  {
   "tabela": "planos",
@@ -230,6 +248,15 @@
   "linhas": 194,
   "decisao": "mantidos; indício de planos genéricos, insumo para a IA",
   "exemplo": null,
-  "depois": 194
+  "depois": 189
+ },
+ {
+  "tabela": "planos",
+  "problema": "texto_plano só com o marcador '-'",
+  "linhas": 6,
+  "decisao": "tratado como vazio: marcador 'sem texto'; excluído da análise de linguagem",
+  "exemplo": null,
+  "desde": "SR2",
+  "depois": 0
  }
 ]
