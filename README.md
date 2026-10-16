@@ -39,7 +39,7 @@ leitura do cliente estiver disponível, só essa função muda.
 
 ## Reprodutibilidade
 
-Sem caminhos absolutos, sem passos manuais não registrados. Todo arquivo é lido e gravado em UTF-8, inclusive no Windows (sem precisar de `PYTHONUTF8`).
+Sem caminhos absolutos, sem passos manuais não registrados. Todo arquivo é lido e gravado em UTF-8, inclusive no Windows (sem precisar de `PYTHONUTF8`). A sequência abaixo é reexecutada no Windows a cada push (`.github/workflows/reproducao-windows.yml`, codificação cp1252), com conferência das contagens, dos pacotes embutidos e das saídas versionadas.
 
 ```bash
 python3 -m venv .venv && source .venv/bin/activate
