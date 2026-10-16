@@ -1,0 +1,43 @@
+# Reexecuta a sequência do README no Windows, sem PYTHONUTF8 (codificação padrão cp1252),
+# e confere que as saídas versionadas e os pacotes embutidos saem idênticos.
+name: Reprodução no Windows
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+jobs:
+  readme:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Codificação padrão do Python
+        run: python -c "import locale, sys; print(locale.getpreferredencoding(), sys.flags.utf8_mode)"
+      - name: Dependências
+        run: pip install -r requirements.txt
+      - name: Sequência do README
+        run: |
+          $ErrorActionPreference = "Stop"; $PSNativeCommandUseErrorActionPreference = $true
+          function Iguais($html, $dados) {
+            $r = python pipeline/embutir_dados.py --html $html --dados $dados --verificar
+            Write-Output "$html $r"; if ($r -ne "iguais") { throw "$html diferente do pipeline" }
+          }
+          $s = python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida; Write-Output $s
+          if ($s -ne "modo=manual equipes=132 resultados=1363 eixo3=12738 nps=6530 planos=420 problemas_logados=28") { throw "contagens diferentes do README" }
+          python pipeline/perfilar_base.py --entrada data/entrada --saida data/saida --docs docs
+          Iguais app/mvp5.html data/saida/rastreia_data.json
+          python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida --pacote v6
+          Iguais app/mvp6.html data/saida/rastreia_data_v6.json
+          python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida-dicionario --modo dicionario
+          Iguais app/mvp3.html data/saida-dicionario/rastreia_data.json
+          Iguais app/mvp4.html data/saida-dicionario/rastreia_data.json
+          python pipeline/verificar_prototipo5.py --base data/saida-dicionario --p5 data/saida --md docs/verificacao-prototipo-5.md
+      - name: Saídas versionadas idênticas às do repositório
+        run: |
+          git status --short
+          git diff --ignore-cr-at-eol --exit-code -- data docs/perfilamento-base.md docs/verificacao-prototipo-5.md app
