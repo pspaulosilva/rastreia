@@ -15,10 +15,10 @@ dependência externa é a fonte do Google Fonts, opcional). Publicados em
 
 ## Protótipo 6: ajustes pedidos na devolutiva do SR1
 
-- Toda tela registra, abaixo do título, as zonas e os máximos de bloco em uso, a fonte (Manual de Avaliação ou dicionário da base) e a versão do pipeline; Configurações troca o conjunto e a escolha fica salva.
+- Toda tela registra, abaixo do título, as faixas de zona em uso e a fonte (Manual ou dicionário); máximos de bloco e versão do pipeline aparecem ao passar o mouse. Configurações troca o conjunto e a escolha fica salva.
 - No modo Dicionário, os números coincidem com os do Protótipo 3 corrigido (rede em 2026.2: média 677, 16 abaixo de 550, 9 quedas de 60+); no modo Manual, com os do Protótipo 5 (média 681, 27 abaixo de 600).
 - Qualidade dos dados: contagem antes e depois de cada tratamento, situação (corrigido, mantido e sinalizado, conferido), tipo, volume antes e depois por tabela com unicidade da chave, filtro por tabela e exportação do log em JSON.
-- Nova tela Análise exploratória (perfis central e distrital): média, mediana, desvio-padrão, quartis, histograma, boxplot (por distrito ou por grupo), dispersão Eixo 1 x Eixo 3 com correlação, completude da base crua e observações escritas.
+- Nova tela Análise exploratória (perfis central e distrital): medidas de posição e dispersão, completude da base crua e gráficos interativos. Histograma com escolha da variável e da largura da faixa (clique na barra lista as equipes); boxplot por distrito, grupo ou tipo de equipe (clique na caixa lista as equipes, outliers abrem a equipe); dispersão com eixos à escolha, linha de tendência e zonas que se escondem pela legenda. Dica com os valores ao passar o mouse. Cada análise tem o botão "Interpretar com IA", que escreve o que se pode inferir e o próximo passo a partir das estatísticas do recorte e dos filtros em uso (gerado no próprio navegador, sem IA externa, como o Assistente).
 - Comparações com limiares sem arredondamento; cartão de quedas compara com o ciclo anterior.
 
 `mvp3` a `mvp6` trazem o aviso "DADOS SIMULADOS", perfis de acesso (central, distrital,
