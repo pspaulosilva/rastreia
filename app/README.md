@@ -25,6 +25,9 @@ Feito sobre o Protótipo 6, com o mesmo pacote de dados (`embutir_dados.py --ver
 - Feedback das telas: botão Feedback em todas as telas (sugestão, problema, elogio, dúvida) com marcação opcional de um ponto da tela; as marcações aparecem numeradas sobre a tela. No Assistente, cada resposta tem 👍/👎 e comentário.
 - Uso e feedback (painel interno, `?interno=1` ou Configurações): sessões, telas vistas e tempo médio, cliques mais frequentes, uso por dia e por perfil, perguntas e avaliações do assistente, feedbacks com situação (novo, em análise, resolvido, descartado) e "Ver na tela", envios às unidades, exportação JSON e CSV.
 - Persistência isolada em `lerStore()`/`salvarStore()` e registro de uso em `track()`: no protótipo tudo fica no `localStorage` do navegador (cada navegador tem os próprios dados); em produção só essas funções passam a gravar na API interna. O registro de uso pode ser desligado em Configurações.
+- Revisão da tela de Alertas: cada alerta tem uma ação principal (conforme o tipo e o andamento) e o menu "Mais ações"; clicar na linha abre o acompanhamento; o adiamento guarda a data e o alerta volta a pendente depois de 7 dias; lista de 25 em 25; "Limpar filtros" só aparece com filtro ativo.
+- Planos de ação: exportação CSV na tela Planos de ação (recorte do perfil) e na página da equipe; a proposta reescrita pela IA pode ser exportada em texto.
+- Ícones nos filtros, nas Configurações e nas janelas de feedback e de acompanhamento; seletores com a seta afastada da borda.
 - Correção: a recomendação do Bloco A exibia `${BMAX.a}` literal em vez do máximo do bloco.
 
 ## Protótipo 6: ajustes pedidos na devolutiva do SR1
