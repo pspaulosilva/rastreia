@@ -15,7 +15,7 @@ pipeline/perfilar_base.py        perfilamento escrito, medidas de dispersão e f
 pipeline/verificar_prototipo5.py conferência dos números do Protótipo 5 contra a base comum
 pipeline/embutir_dados.py        injeta rastreia_data.json no protótipo (fecha o ciclo pipeline -> tela)
 pipeline/capturar_telas.py       capturas das telas dos protótipos com Chromium
-app/                             os 6 protótipos; o atual é app/mvp6.html (Protótipo 6); ver app/README.md
+app/                             os 7 protótipos; o atual é app/mvp7.html (Protótipo 7); ver app/README.md
 data/                            entrada e saída do pipeline (CSVs da base comum versionados; ver data/README.md)
 docs/                            documentação; docs/processo/ (backlog, riscos, sprints, ferramentas); docs/capturas/
 requirements.txt                 dependências Python
@@ -50,9 +50,10 @@ python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida
 python pipeline/perfilar_base.py  --entrada data/entrada --saida data/saida --docs docs
 python pipeline/embutir_dados.py --html app/mvp5.html --dados data/saida/rastreia_data.json --verificar   # "iguais"
 
-# Protótipo 6 (atual): pacote com os dois conjuntos de parâmetros
+# Protótipos 6 e 7 (atual): pacote com os dois conjuntos de parâmetros
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida --pacote v6
 python pipeline/embutir_dados.py --html app/mvp6.html --dados data/saida/rastreia_data_v6.json --verificar   # "iguais"
+python pipeline/embutir_dados.py --html app/mvp7.html --dados data/saida/rastreia_data_v6.json --verificar   # "iguais"
 
 # Protótipos 3 e 4: mesmo pipeline com os parâmetros do dicionário da base (v1.0)
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida-dicionario --modo dicionario

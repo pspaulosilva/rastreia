@@ -54,6 +54,17 @@ Objetivo: receber os dados do Recife Monitora sem tocar na plataforma atual e en
 | US15 | Como Renata, quero perguntar em linguagem natural sobre manuais e resultados e receber resposta com fonte, para não abrir planilhas. | Respostas só da base interna; fonte citada; respeita perfil de acesso (local, distrital, central). | RF09, RNF01 | S | 13 | Em andamento (respostas roteirizadas no protótipo) |
 | US16 | Como Renata, quero que a IA rode em servidor próprio com GPU, sem chamadas externas, para cumprir a LGPD e ter custo previsível. | Modelo local quantizado; sem API externa; estimativa de hardware apresentada ao cliente. | RNF01, RNF04, RNF05 | M | 13 | A fazer |
 
+## E7. Feedback do cliente (16/11/2026)
+
+Origem: feedback do cliente sobre o Protótipo 6.
+
+| ID | User story | Critérios de aceite | RF | Pri. | Pts | Status |
+|---|---|---|---|---|---|---|
+| US17 | Como Ana Lúcia, quero enviar pelo assistente um feedback a uma unidade, para devolver o diagnóstico sem sair do RASTRE.IA. | Ação em respostas sobre equipe e pedido em texto; texto sugerido com pontuação e recomendações com fonte, editável; canal e-mail institucional ou SEI; histórico por unidade; respeita o perfil. | RF06, RF09 | S | 5 | Feito (Protótipo 7, envio simulado) |
+| US18 | Como Ana Lúcia, quero agendar a visita técnica de um alerta, registrar observações e anexar o relatório da visita, e filtrar os alertas por situação e data, para acompanhar o que já foi encaminhado. | Situação, data da visita, responsável, observações com autor e data, anexo, histórico; filtros por severidade, situação, agendamento, distrito e texto; atrasadas destacadas; exportação CSV. | RF06 | M | 8 | Feito (Protótipo 7, dados no navegador) |
+| US19 | Como Renata, quero registrar feedback e marcar um ponto da tela, inclusive nas respostas da IA, para a equipe RASTRE.IA saber exatamente o que ajustar. | Botão em todas as telas; tipo e texto; marcação opcional exibida sobre a tela; 👍/👎 e comentário por resposta do assistente; situação do feedback. | RNF05 | S | 5 | Feito (Protótipo 7) |
+| US20 | Como equipe RASTRE.IA, queremos medir o uso do app (telas, tempo, cliques, perguntas) num painel interno, para priorizar a próxima versão. | Registro de telas, tempo por tela, cliques, perguntas e envios; painel interno com período; exportação; registro desligável. Em produção, gravação na API interna com trilha de auditoria. | RNF05 | S | 8 | Em andamento (painel no Protótipo 7; dados por navegador até existir a API) |
+
 ## Resumo
 
 | Épico | Stories | Pontos | Feito | Em andamento | A fazer |
@@ -64,6 +75,7 @@ Objetivo: receber os dados do Recife Monitora sem tocar na plataforma atual e en
 | E4 Alertas | 3 | 18 | 1 | 0 | 2 |
 | E5 Recomendações | 2 | 16 | 1 | 1 | 0 |
 | E6 Assistente | 2 | 26 | 0 | 1 | 1 |
-| Total | 16 | 108 | 7 | 3 | 6 |
+| E7 Feedback do cliente | 4 | 26 | 3 | 1 | 0 |
+| Total | 20 | 134 | 10 | 4 | 6 |
 
 Ordem para o SR2: US09, US11, US14, US03, US15. Quadro no Trello espelha este arquivo (uma lista por épico, um cartão por story).
