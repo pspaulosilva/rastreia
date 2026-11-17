@@ -504,6 +504,7 @@ tr.so-pdf{display:table-row}
 .z-cri,.sev-alto,.mat-1,.hist-grid .z-cri{color:var(--serious-tx)}
 .nav .cnt,.pin{color:var(--on-sev)}
 .pin.tmp{color:var(--accent-ink)}
+.arec{margin-top:6px;font-size:12.5px;color:var(--ink-2)}
 </style>
 <div class="band"></div>
 <div class="shell">
@@ -653,10 +654,10 @@ function alertRow(a){const st=alertSt(a.id),A=ST.alertas[a.id],S={crit:"Crítico
   const meta=A?[A.ag?`<span class="badge ${late?"late":"info"}">${late?"Atrasada · ":""}Visita ${fdata(A.ag)}</span>`:"",A.resp?`<span class="badge">Resp.: ${esc(A.resp)}</span>`:"",A.obs.length?`<span class="badge">${A.obs.length} observaç${A.obs.length>1?"ões":"ão"}</span>`:"",A.anx.length?`<span class="badge">${A.anx.length} relatório${A.anx.length>1?"s":""}</span>`:""].join(""):"";
   const sit=st==="aberto"?"":st==="done"?` <span class="badge st-ok">Tratado</span>`:st==="snoozed"?` <span class="badge mute">Adiado${A.ate?" até "+fdata(A.ate).slice(0,5):""}</span>`:` <span class="badge ast">${AST[st]}</span>`;
   /* uma ação principal por alerta, conforme o tipo e o andamento; as demais ficam em "Mais ações"; clicar na linha abre o acompanhamento */
-  const visita=a.act==="Agendar visita técnica",fb=/Contatar|Enviar recomenda|Orientar/.test(a.act),ac=a.act==="Acompanhar",eq=!visita&&!fb&&!ac;
-  const pri=!op?`<button class="btn sm" data-undo="${a.id}">Reabrir</button>`:visita?`<button class="btn pri sm" data-acomp="${a.id}" data-foco="${A&&A.ag?"obs":"ag"}">${A&&A.ag?"Registrar visita":a.act}</button>`:fb?`<button class="btn pri sm" data-fbu="${a.team.id}" data-aref="${a.id}">${a.act}</button>`:ac?`<button class="btn pri sm" data-acomp="${a.id}">Acompanhar</button>`:`<button class="btn pri sm" data-open="${a.team.id}">${a.act}</button>`;
-  const menu=`<details class="amenu"><summary class="btn sm" aria-label="Mais ações" title="Mais ações">⋯</summary><div class="amenu-l">${ac&&op?"":`<button data-acomp="${a.id}">${ic("edit")}Abrir acompanhamento</button>`}${op?`<button data-done="${a.id}">${ic("check")}Marcar como tratado</button><button data-snooze="${a.id}">${ic("clock")}Adiar 7 dias</button>`:""}${fb&&op?"":`<button data-fbu="${a.team.id}" data-aref="${a.id}">${ic("mail")}Enviar feedback à unidade</button>`}${eq&&op?"":`<button data-open="${a.team.id}">${ic("people")}Abrir página da equipe</button>`}</div></details>`;
-  return`<div class="alert ${op?"":st}" data-aid="${a.id}" tabindex="0" role="group" aria-label="${esc(a.t)}. Enter abre o acompanhamento"><div class="stripe" style="background:var(--${a.sev==="crit"?"crit":a.sev==="alto"?"serious":"warn"})"></div><div><span class="sev sev-${a.sev}">${S[a.sev]}</span>${sit}<div class="t">${a.t}</div><div class="w">${a.w}</div>${meta?`<div class="ameta">${meta}</div>`:""}${A&&A.nota&&st==="done"?`<div class="anota">${ic("check")}Resolução: ${esc(A.nota)}</div>`:""}</div><div class="act">${pri}${menu}</div></div>`}
+  const visita=a.act==="Agendar visita técnica",fb=/Contatar|Enviar recomenda|Orientar/.test(a.act),eq=!visita&&!fb;
+  const pri=!op?`<button class="btn sm" data-undo="${a.id}">Reabrir</button>`:visita?`<button class="btn pri sm" data-acomp="${a.id}" data-foco="${A&&A.ag?"obs":"ag"}">${A&&A.ag?ic("edit")+"Registrar visita":ic("event")+"Agendar visita"}</button>`:fb?`<button class="btn pri sm" data-fbu="${a.team.id}" data-aref="${a.id}">${ic("mail")}Enviar feedback</button>`:`<button class="btn pri sm" data-open="${a.team.id}">${ic("people")}Abrir equipe</button>`;
+  const menu=`<details class="amenu"><summary class="btn sm" aria-label="Mais ações" title="Mais ações">⋯</summary><div class="amenu-l"><button data-acomp="${a.id}">${ic("edit")}Abrir acompanhamento</button>${op?`<button data-done="${a.id}">${ic("check")}Marcar como tratado</button><button data-snooze="${a.id}">${ic("clock")}Adiar 7 dias</button>`:""}${fb&&op?"":`<button data-fbu="${a.team.id}" data-aref="${a.id}">${ic("mail")}Enviar feedback à unidade</button>`}${eq&&op?"":`<button data-open="${a.team.id}">${ic("people")}Abrir página da equipe</button>`}</div></details>`;
+  return`<div class="alert ${op?"":st}" data-aid="${a.id}" tabindex="0" role="group" aria-label="${esc(a.t)}. Enter abre o acompanhamento"><div class="stripe" style="background:var(--${a.sev==="crit"?"crit":a.sev==="alto"?"serious":"warn"})"></div><div><span class="sev sev-${a.sev}">${S[a.sev]}</span>${sit}<div class="t">${a.t}</div><div class="w">${a.w}</div>${op?`<div class="arec">Recomendado: ${RECO[a.id[0]]||a.act}</div>`:""}${meta?`<div class="ameta">${meta}</div>`:""}${A&&A.nota&&st==="done"?`<div class="anota">${ic("check")}Resolução: ${esc(A.nota)}</div>`:""}</div><div class="act">${pri}${menu}</div></div>`}
 const AF0={sev:"todas",st:"pend",ag:"todos",ds:"",q:"",ord:"urg"};const AF={...AF0,lim:25};
 const agDe=a=>(ST.alertas[a.id]||{}).ag||"";
 function alertFiltro(a){const A=ST.alertas[a.id],st=alertSt(a.id),h=hoje(),ag=agDe(a);
@@ -1128,7 +1129,8 @@ const visto=k=>{try{return localStorage.getItem("rastreia.visto."+k)==="1"}catch
 const marcarVisto=k=>lsSet("rastreia.visto."+k,"1");
 const dica=(k,txt)=>visto(k)?"":`<div class="dica" role="note">${ic("info")}<span>${txt}</span><button data-visto="${k}" aria-label="Dispensar dica">${ic("close")}</button></div>`;
 /* selo das faixas ao lado do título (substitui a linha de parâmetros repetida em toda tela) */
-function paramChip(){return`<button class="pchip" data-go="config" title="Zonas ${ZTXT} · blocos do Eixo 1 A${BMAX.a}/B${BMAX.b}/C${BMAX.c} · fonte: ${FONTE.zonas} · ${FONTE.versao}. Clique para trocar." aria-label="Faixas do ${FONTE.curto}: ${ZTXT}. Trocar em Configurações">${ic("tune")}Faixas: ${FONTE.curto}</button>`}
+/* o selo só aparece quando as faixas diferem do padrão; o padrão fica em Configurações */
+function paramChip(){if(MODO===PAC.meta.modo_padrao)return"";return`<button class="pchip" data-go="config" title="Zonas ${ZTXT} · blocos do Eixo 1 A${BMAX.a}/B${BMAX.b}/C${BMAX.c} · fonte: ${FONTE.zonas} · ${FONTE.versao}. Clique para trocar." aria-label="Faixas do ${FONTE.curto}: ${ZTXT}. Trocar em Configurações">${ic("tune")}Faixas: ${FONTE.curto}</button>`}
 
 /* ---------- v8: alertas agrupados por equipe, lista ou agenda ---------- */
 const AV={modo:"lista",grp:true};
@@ -1260,6 +1262,8 @@ function bindV8(m){
   m.querySelectorAll("[data-sec]").forEach(el=>{const alvo=document.getElementById(el.dataset.sec);if(!alvo){el.remove();return}el.onclick=()=>alvo.scrollIntoView({behavior:"smooth",block:"start"})});
   const pdf=$("#res-pdf");if(pdf)pdf.onclick=imprimirResumo}
 
+/* recomendação de cada tipo de alerta, mostrada no corpo do alerta (o botão traz só a ação) */
+const RECO={p:"contatar a unidade para entender a ausência de dados no ciclo",z:"visita técnica à equipe para tratar os indicadores do Eixo 3",d:"enviar à equipe recomendações sobre os indicadores que caíram",t:"acompanhar a evolução da equipe no próximo ciclo",a:"orientar a equipe sobre a adesão à pesquisa interna (mínimo de 30%)",n:"analisar os atributos com NPS negativo na página da equipe"};
 
 /* ---------- render ---------- */
 function renderUser(){const P=PROFILES[profile];$("#usel-img").src=AVATARS[profile];$("#usel-n").textContent=P.n;$("#usel-r").textContent=P.r;
