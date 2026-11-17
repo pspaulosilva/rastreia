@@ -424,11 +424,6 @@ body[data-view="equipe"] .topbar .sub{display:block;overflow:visible}
 .dica span{flex:1}
 .dica button{padding:4px;border-radius:6px;line-height:0}
 .dica button .ic{margin:0}
-.bemvindo{display:flex;gap:14px;align-items:center;flex-wrap:wrap;padding:14px 18px;margin-bottom:16px;border-left:4px solid var(--accent)}
-.bemvindo>div:first-child{flex:1;min-width:240px}
-.bemvindo b{font-family:Poppins,sans-serif;font-weight:600}
-.bemvindo p{color:var(--ink-2);font-size:13.5px;margin-top:2px}
-.bv-a{display:flex;gap:8px;flex-wrap:wrap}
 /* agenda de visitas */
 .agbar{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--line)}
 .agbar .af-btns{margin-left:auto}
@@ -505,6 +500,67 @@ tr.so-pdf{display:table-row}
 .nav .cnt,.pin{color:var(--on-sev)}
 .pin.tmp{color:var(--accent-ink)}
 .arec{margin-top:6px;font-size:12.5px;color:var(--ink-2)}
+/* primeiros passos no Painel */
+.bemvindo{padding:18px 20px;margin-bottom:16px;border-left:4px solid var(--accent);display:flex;flex-direction:column;gap:12px}
+.bv-top{display:flex;gap:16px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.bv-top>div:first-child{flex:1;min-width:240px}
+.bv-top b{font-family:Poppins,sans-serif;font-weight:600;font-size:16px}
+.bv-top p{color:var(--ink-2);font-size:13.5px;margin-top:2px;max-width:70ch}
+.bv-prog{display:flex;flex-direction:column;gap:4px;min-width:120px;font-size:12.5px;color:var(--ink-2)}
+.bv-prog b{font-size:14px;color:var(--ink)}
+.bv-bar{height:6px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+.bv-bar i{display:block;height:100%;background:var(--good);border-radius:999px}
+.passos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.passos li{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid var(--line)}
+.passos li:first-child{border-top:0}
+.passos li.prox{background:var(--accent-soft)}
+.passos .pn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font:600 12.5px Poppins,sans-serif;border:1.5px solid var(--line);color:var(--ink-2);background:var(--surface)}
+.passos li.prox .pn{border-color:var(--accent-bg);background:var(--accent-bg);color:#fff}
+.passos li.feito .pn{border-color:var(--good);background:var(--good);color:#fff}
+.passos li.feito .pn .ic{width:14px;height:14px;margin:0}
+.passos li b{font-weight:600;font-size:13.5px;display:block}
+.passos li.feito b{color:var(--ink-2)}
+.passos li small{font-size:12.5px;color:var(--muted)}
+.bv-f{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.bv-f .lnk{font-size:13px;display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:0;cursor:pointer}
+.bv-min{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:10px 16px;margin-bottom:16px;border-left:4px solid var(--accent)}
+.bv-min .bv-prog{flex-direction:row;align-items:center;gap:8px;min-width:0}
+.bv-min .bv-bar{width:70px}
+.bv-prox{flex:1;min-width:200px;font-size:13px;color:var(--ink-2)}
+@media (max-width:640px){.passos li{grid-template-columns:26px 1fr}.passos li .btn{grid-column:2;justify-self:start}}
+/* cartões de números clicáveis e detalhamento */
+button.tile.kpi{text-align:left;font:inherit;color:inherit;cursor:pointer;display:flex;flex-direction:column;border:1px solid var(--line);transition:border-color .15s,box-shadow .15s}
+button.tile.kpi:hover{border-color:var(--accent);box-shadow:0 2px 10px rgba(45,47,166,.08)}
+button.tile.kpi:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.kpi-mais{margin-top:auto;padding-top:8px;font-size:11.5px;color:var(--accent-tx);display:inline-flex;align-items:center;gap:4px;opacity:.85}
+.kpi-mais .ic{width:13px;height:13px;margin:0}
+button.tile.kpi:hover .kpi-mais{opacity:1;text-decoration:underline}
+.kpi-b{max-height:min(62vh,640px);overflow:auto}
+.kpi-b .eyebrow{display:block;margin-bottom:6px}
+.kpi-passos{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px;font-size:13.5px}
+.kpi-passos li{display:flex;gap:10px;align-items:flex-start}
+.kpi-passos .pn{flex:none;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--navy);display:grid;place-items:center;font:600 11.5px Poppins,sans-serif}
+.kpi-g{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.kpi-g{grid-template-columns:1fr}}
+.kpi-eixos{display:flex;flex-direction:column;gap:6px}
+.kpi-eixos span{display:flex;align-items:baseline;gap:6px;font-size:13px;color:var(--ink-2)}
+.kpi-eixos b{margin-left:auto;font-size:15px;color:var(--ink)}
+.kpi-eixos small{color:var(--muted);font-size:11.5px;min-width:42px}
+.kpi-zonas{display:flex;flex-wrap:wrap;gap:6px}
+.kpi-zonas .zone b{margin-left:4px}
+.kpi-l{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.kpi-eq{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 12px;border:0;border-top:1px solid var(--line);background:var(--surface);color:inherit;font:inherit;text-align:left;cursor:pointer}
+.kpi-eq:first-child{border-top:0}
+.kpi-eq:hover{background:var(--surface-2)}
+.kpi-eq b{font-weight:600;font-size:13px;display:block}
+.kpi-eq small{font-size:11.5px;color:var(--muted)}
+.kpi-eq>.num{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end;font-size:13px;white-space:nowrap}
+.kpi-n{font-size:12.5px;color:var(--muted)}
+.kpi-f{font-size:12.5px;color:var(--ink-2);border-top:1px solid var(--line);padding-top:10px}
+.kpi-t{width:100%;border-collapse:collapse;font-size:13px}
+.kpi-t td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.kpi-t .num{text-align:right}
+@media print{.bemvindo,.bv-min,.kpi-mais{display:none!important}}
 </style>
 <div class="band"></div>
 <div class="shell">
@@ -640,8 +696,6 @@ function paramLine(){return`<p class="params"><span title="Zonas ${ZTXT} · bloc
 function header(title,sub,right=""){return`<div class="topbar"><div><button class="menu-btn btn sm" id="menu">☰ Menu</button><p class="sub">${sub}</p><div class="h1row"><h1>${title}</h1>${paramChip()}</div></div><div class="filters">${right}</div></div>`}
 function teamCard(t){const s=score(t),st=status(t),z=zone(s),d=delta(t),b=breakdown(t);
   return`<button class="team ${st!=="ok"?"np":""}" data-id="${t.id}"><span class="nm">${t.nome}</span><span class="usf">${profile==="central"?dsShort(t.ds)+" · ":""}${t.tipo} · grupo ${t.grupo} · ${t.prof} prof.</span>${st==="ok"?`<span class="sc"><b class="num">${s}</b>${deltaHtml(d&&d.d)}</span><span class="zone ${z.cls}">${z.name}</span>`:`<span class="sc"><b class="num" style="color:var(--muted)">—</b></span><span class="badge ${st==="desclassificada"?"warn":"mute"}">${st==="desclassificada"?"Desclassificada":"Não participou"} em ${CURC}</span>`}<span class="badges">${b&&!b.av?'<span class="badge warn" title="Taxa de resposta da pesquisa interna abaixo de 30%">Bloco A inválido</span>':""}${b&&b.e2r?'<span class="badge info" title="Eixo 2 ausente na extração; reconstruído pelo pipeline">Eixo 2 reconstruído</span>':""}</span>${spark(hist(t))}</button>`}
-function tiles(list){const ok=list.filter(t=>status(t)==="ok");const cur=ok.map(t=>score(t));const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):0;const prevOk=list.map(t=>pts(t,PREVC)).filter(v=>v!=null);const crit=ok.filter(t=>pts(t)<CRIT).length,critPrev=prevOk.filter(v=>v<CRIT).length;const drop=ok.filter(t=>{const d=delta(t);return d&&d.from===PREVC&&d.d<=-60}).length;const al=alerts(t=>list.includes(t)).filter(a=>isOpen(a.id));
-  return`<div class="tiles"><div class="card tile"><div class="eyebrow">Pontuação média</div><div class="v num">${avg(cur)}</div><div class="d">${deltaHtml(avg(cur)-avg(prevOk))} vs ${PREVC}</div></div><div class="card tile"><div class="eyebrow">Participação</div><div class="v num">${ok.length}<span style="font-size:15px;color:var(--muted)"> / ${list.length}</span></div><div class="d">${list.length-ok.length} sem pontuação em ${CURC}</div></div><div class="card tile"><div class="eyebrow">Abaixo de ${CRIT}</div><div class="v num" style="color:${crit?"var(--serious)":"inherit"}">${crit}</div><div class="d">${crit-critPrev>0?"+":""}${crit-critPrev} vs ciclo anterior</div></div><div class="card tile"><div class="eyebrow">Quedas de 60+ pts</div><div class="v num">${drop}</div><div class="d">de ${ok.length} com dados</div></div><div class="card tile"><div class="eyebrow">Alertas abertos</div><div class="v num" style="color:${al.some(a=>a.sev==="crit")?"var(--crit)":"inherit"}">${al.length}</div><div class="d">${al.filter(a=>a.sev==="crit").length} críticos</div></div></div>`}
 /* ---------- views ---------- */
 function vPainel(){const P=PROFILES[profile];let list=teams.filter(P.scope);if(profile==="central")return vCentral();
   const zones=["todas","Excelência","Qualidade","Aperfeiçoamento","Crítica","Insuficiente","sem dados"];
@@ -1230,11 +1284,6 @@ function resumoEquipe(t){const st=status(t),b=breakdown(t),al=alerts(x=>x===t).f
   return`<section class="card eq-sum" aria-label="Resumo da equipe"><div><div class="eyebrow">${ic("flag")}Situação</div>${sit}</div><div><div class="eyebrow">${ic("chart")}Maior perda</div>${perda}</div><div><div class="eyebrow">${ic("bulb")}Próxima ação</div>${acao}</div></section>
   <nav class="eq-nav" aria-label="Seções da página"><button data-sec="sec-evo">Evolução</button><button data-sec="sec-eixos">Eixos</button><button data-sec="sec-recs">Recomendações</button><button data-sec="sec-planos">Planos de ação</button></nav>`}
 
-/* ---------- v8: boas-vindas por perfil ---------- */
-function bemVindo(){const P=PROFILES[profile],al=alerts(P.scope).filter(a=>isOpen(a.id)),n=al.length,cr=al.filter(a=>a.sev==="crit").length;
-  const txt=!n?"Nenhum alerta pendente no seu recorte. Veja a síntese do ciclo no resumo do quadrimestre ou pergunte ao assistente.":profile==="local"?`Comece ${pl(n,"pelo alerta pendente","pelos "+n+" alertas pendentes")} da sua unidade. Na página da equipe você vê onde a pontuação foi perdida e o que fazer no próximo ciclo.`:profile==="distrital"?`Comece ${pl(n,"pelo alerta pendente","pelos "+n+" alertas pendentes")}${cr?` (${cr} ${pl(cr,"crítico","críticos")})`:""}: agende as visitas técnicas e registre o que foi combinado com cada equipe.`:`A rede tem ${n} ${pl(n,"alerta pendente","alertas pendentes")}${cr?`, ${cr} ${pl(cr,"crítico","críticos")}`:""}. Comece pelos críticos e veja a síntese no resumo do quadrimestre.`;
-  return`<section class="card bemvindo" role="note"><div><b>Olá, ${P.n.split(" ")[0]}.</b><p>${txt}</p></div><div class="bv-a">${n?`<button class="btn sm pri" data-bv="alertas">${ic("bell")}Ver alertas</button>`:`<button class="btn sm pri" data-bv="resumo">${ic("doc")}Ver resumo</button>`}<button class="btn sm" data-bv="chat">${ic("chat")}Perguntar ao assistente</button><button class="btn sm" data-bv="">Entendi</button></div></section>`}
-
 /* ---------- v8: resumo do quadrimestre em PDF pela impressão do navegador ---------- */
 function imprimirResumo(){const r=document.documentElement,tm=r.getAttribute("data-theme"),tt=document.title;
   r.setAttribute("data-theme","light");document.title=`RASTRE.IA - Resumo ${CURC} - ${PROFILES[profile].label}`;
@@ -1242,7 +1291,8 @@ function imprimirResumo(){const r=document.documentElement,tm=r.getAttribute("da
   window.addEventListener("afterprint",volta);track("exportar_pdf");window.print()}
 
 function bindV8(m){
-  if(view==="painel"&&!visto("bv."+profile)){const tb=m.querySelector(".topbar");if(tb){tb.insertAdjacentHTML("afterend",bemVindo());m.querySelectorAll("[data-bv]").forEach(b=>b.onclick=()=>{marcarVisto("bv."+profile);if(b.dataset.bv){view=b.dataset.bv;window.scrollTo(0,0)}render()})}}
+  if(view==="painel"){const tb=m.querySelector(".topbar");if(tb){tb.insertAdjacentHTML("afterend",bemVindo());bindPassos(m)}}
+  m.querySelectorAll("[data-kpi]").forEach(el=>el.onclick=()=>kpiDetalhe(el.dataset.kpi));
   m.querySelectorAll("[data-visto]").forEach(b=>b.onclick=()=>{marcarVisto(b.dataset.visto);render()});
   m.querySelectorAll("[data-done]").forEach(el=>el.onclick=e=>{e.stopPropagation();const d=el.closest("details");if(d)d.open=false;tratarAlerta(el.dataset.done)});
   m.querySelectorAll(".alert[data-aid]").forEach(el=>el.onkeydown=e=>{if(e.target===el&&(e.key==="Enter"||e.key===" ")){e.preventDefault();abrirAcomp(el.dataset.aid)}});
@@ -1264,6 +1314,93 @@ function bindV8(m){
 
 /* recomendação de cada tipo de alerta, mostrada no corpo do alerta (o botão traz só a ação) */
 const RECO={p:"contatar a unidade para entender a ausência de dados no ciclo",z:"visita técnica à equipe para tratar os indicadores do Eixo 3",d:"enviar à equipe recomendações sobre os indicadores que caíram",t:"acompanhar a evolução da equipe no próximo ciclo",a:"orientar a equipe sobre a adesão à pesquisa interna (mínimo de 30%)",n:"analisar os atributos com NPS negativo na página da equipe"};
+
+/* ---------- v8: primeiros passos no Painel (substitui o cartão de boas-vindas) ---------- */
+/* cada passo calcula o próprio andamento a partir dos alertas, envios e planos; passos sem dado próprio contam como feitos ao serem abertos */
+const desmarcarVisto=k=>{try{localStorage.removeItem("rastreia.visto."+k)}catch(e){}};
+function irAlertas(f){Object.assign(AF,AF0,{lim:25},f||{});AV.modo="lista";view="alertas"}
+function passos(){const P=PROFILES[profile],sc=P.scope,al=alerts(sc).filter(a=>isOpen(a.id)),lst=teams.filter(sc);
+  const crit=al.filter(a=>a.id[0]==="z"),critAg=crit.filter(a=>agDe(a)).length,fb=al.filter(a=>/^[pda]/.test(a.id)),fbOk=fb.filter(a=>ST.envios.some(e=>e.alerta===a.id)).length;
+  const ref=teams.filter(sc).flatMap(t=>t.planos.filter(p=>p.c===CURC||p.c===PREVC)).filter(p=>p.n===1).length;
+  const vis=k=>visto("passo."+k+"."+profile);
+  const pVisita={k:"visita",t:profile==="central"?"Garantir visita às equipes da rede em zona crítica":"Agendar visita às equipes em zona crítica",d:crit.length?`${critAg} de ${crit.length} ${pl(crit.length,"equipe com visita marcada","equipes com visita marcada")}`:"Nenhuma equipe em zona crítica no recorte",f:critAg===crit.length,b:"Agendar visitas",ir:()=>irAlertas({sev:"crit",ag:"sem"})};
+  const pFb={k:"feedback",t:"Enviar feedback às equipes com queda ou sem dados",d:fb.length?`${fbOk} de ${fb.length} ${pl(fb.length,"alerta com feedback enviado","alertas com feedback enviado")}`:"Nenhum alerta pede feedback agora",f:fbOk===fb.length,b:"Enviar feedback",ir:()=>irAlertas()};
+  const pPlan={k:"planos",t:"Revisar os planos de ação que precisam ser refeitos",d:ref?`${ref} ${pl(ref,"plano classificado","planos classificados")} como reformulação nos dois últimos ciclos`:"Nenhum plano para reformular nos dois últimos ciclos",f:!ref||vis("planos"),b:"Ver planos",ir:()=>{Object.assign(PF,PF0,{lim:20,mat:ref?1:0});view="planos"}};
+  const pRes={k:"resumo",t:profile==="central"?"Gerar o resumo do quadrimestre da rede":"Gerar o resumo do quadrimestre para a reunião com as equipes",d:`Síntese do ciclo ${CURC} em PDF, com ranking e recomendações`,f:vis("resumo"),b:"Abrir resumo",ir:()=>{view="resumo"}};
+  if(profile==="local"){const pior=[...lst].sort((a,b)=>(score(a)??1e4)-(score(b)??1e4))[0];
+    return[{k:"equipe",t:LOCAL_N>1?"Ver onde as equipes da unidade perderam pontos":"Ver onde a sua equipe perdeu pontos",d:`Comece pela ${pior.nome}: eixos, maior perda e recomendações`,f:vis("equipe"),b:"Abrir equipe",ir:()=>openTeam(pior.id)},
+      {k:"alertas",t:"Tratar os alertas da unidade",d:al.length?`${al.length} ${pl(al.length,"alerta pendente","alertas pendentes")}`:"Nenhum alerta pendente",f:!al.length,b:"Ver alertas",ir:()=>irAlertas()},
+      {...pPlan,t:"Revisar o plano de ação da equipe"},
+      {k:"chat",t:"Tirar dúvidas sobre a avaliação com o assistente",d:"Por que a nota caiu, o que conta em cada eixo, como melhorar",f:vis("chat"),b:"Perguntar",ir:()=>{view="chat"}}]}
+  if(profile==="central")return[pVisita,{...pFb,t:"Acompanhar o feedback às equipes com queda ou sem dados"},{k:"distritos",t:"Comparar os distritos e ver onde se concentram as equipes críticas",d:"Clique em um distrito no painel abaixo para ver as equipes",f:vis("distritos"),b:"Ver distritos",ir:()=>{marcarVisto("passo.distritos.central");render();const x=document.querySelector(".dist");if(x)x.scrollIntoView({behavior:"smooth",block:"center"})}},pRes];
+  return[pVisita,pFb,pPlan,pRes]}
+function bemVindo(){const P=PROFILES[profile],ps=passos(),feitos=ps.filter(p=>p.f).length,prox=ps.find(p=>!p.f),min=visto("bv."+profile);
+  if(min&&!prox)return"";
+  const ctx=profile==="local"?`Você acompanha ${pl(LOCAL_N,"a equipe","as "+LOCAL_N+" equipes")} da ${LOCAL_USF} no ciclo ${CURC}.`:profile==="distrital"?`Você acompanha as ${teams.filter(P.scope).length} equipes do ${P.label} no ciclo ${CURC}.`:`Você acompanha as ${teams.length} equipes dos 8 distritos no ciclo ${CURC}.`;
+  const barra=`<div class="bv-prog" aria-label="${feitos} de ${ps.length} passos feitos"><span><b>${feitos}</b> de ${ps.length}</span><div class="bv-bar"><i style="width:${Math.round(feitos/ps.length*100)}%"></i></div></div>`;
+  if(min)return`<section class="card bv-min" role="note"><span class="eyebrow">${ic("flag")}Primeiros passos</span>${barra}<span class="bv-prox">Próximo: <b>${prox.t}</b></span><button class="btn sm" data-bvp="${prox.k}">${prox.b}</button><button class="btn sm" data-bvmax>Mostrar todos</button></section>`;
+  return`<section class="card bemvindo" role="note" aria-label="Primeiros passos">
+  <div class="bv-top"><div><b>Olá, ${P.n.split(" ")[0]}.</b><p>${ctx} ${prox?"Estes são os primeiros passos do ciclo, na ordem recomendada. O andamento é atualizado conforme você trabalha.":"Os passos do ciclo estão em dia. Novos alertas voltam a aparecer aqui."}</p></div>${barra}</div>
+  <ol class="passos">${ps.map((p,i)=>`<li class="${p.f?"feito":""} ${p===prox?"prox":""}"><span class="pn" aria-hidden="true">${p.f?ic("check"):i+1}</span><div><b>${p.t}</b><small>${p.d}</small></div><button class="btn sm ${p===prox?"pri":""}" data-bvp="${p.k}">${p.f?"Abrir":p.b}</button></li>`).join("")}</ol>
+  <div class="bv-f"><button class="lnk" data-bvp="ajuda">${ic("chat")}Dúvida sobre algum passo? Pergunte ao assistente</button><button class="btn sm" data-bvmin>Recolher</button></div></section>`}
+function bindPassos(m){const ps=passos();
+  m.querySelectorAll("[data-bvp]").forEach(b=>b.onclick=()=>{const k=b.dataset.bvp;if(k==="ajuda"){view="chat";render();window.scrollTo(0,0);return}const p=ps.find(x=>x.k===k);if(!p)return;
+    marcarVisto("passo."+k+"."+profile);track("primeiros_passos",{passo:k});const v0=view;p.ir();if(view!==v0||view==="equipe"){if(view!=="equipe")render();window.scrollTo(0,0)}});
+  m.querySelectorAll("[data-bvmin]").forEach(b=>b.onclick=()=>{marcarVisto("bv."+profile);render()});
+  m.querySelectorAll("[data-bvmax]").forEach(b=>b.onclick=()=>{desmarcarVisto("bv."+profile);render()})}
+
+/* ---------- v8: cartões de números do Painel com detalhamento (como o número foi calculado) ---------- */
+let KPI_LIST=[];
+function kpiDados(list){const ok=list.filter(t=>status(t)==="ok"),prevOk=list.filter(t=>pts(t,PREVC)!=null);
+  const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length):0;
+  const crit=ok.filter(t=>pts(t)<CRIT),critPrev=prevOk.filter(t=>pts(t,PREVC)<CRIT);
+  const drop=ok.filter(t=>{const d=delta(t);return d&&d.from===PREVC&&d.d<=-60});
+  const al=alerts(t=>list.includes(t)).filter(a=>isOpen(a.id));
+  return{ok,prevOk,avg:avg(ok.map(t=>score(t))),avgPrev:avg(prevOk.map(t=>score(t,PREVC))),crit,critPrev,drop,al}}
+function tiles(list){KPI_LIST=list;const k=kpiDados(list),nc=k.al.filter(a=>a.sev==="crit").length;
+  const T=(id,rot,v,d,cor)=>`<button class="card tile kpi" data-kpi="${id}" aria-label="${rot}: ${txtPuro(String(v))}. Ver como foi calculado"><div class="eyebrow">${rot}</div><div class="v num"${cor?` style="color:${cor}"`:""}>${v}</div><div class="d">${d}</div><span class="kpi-mais">${ic("info")}Ver cálculo</span></button>`;
+  return`<div class="tiles">${T("media","Pontuação média",k.avg,`${deltaHtml(k.avg-k.avgPrev)} vs ${PREVC}`)}${T("part","Participação",`${k.ok.length}<span style="font-size:15px;color:var(--muted)"> / ${list.length}</span>`,`${list.length-k.ok.length} sem pontuação em ${CURC}`)}${T("crit",`Abaixo de ${CRIT}`,k.crit.length,`${k.crit.length-k.critPrev.length>0?"+":""}${k.crit.length-k.critPrev.length} vs ciclo anterior`,k.crit.length?"var(--serious)":"")}${T("queda","Quedas de 60+ pts",k.drop.length,`de ${k.ok.length} com dados`)}${T("alertas","Alertas abertos",k.al.length,`${nc} ${pl(nc,"crítico","críticos")}`,nc?"var(--crit)":"")}</div>`}
+const kEq=(t,extra)=>`<button class="kpi-eq" data-kid="${t.id}"><span><b>${t.nome}</b><small>${profile==="central"?dsShort(t.ds)+" · ":""}${t.usf}</small></span><span class="num">${extra}</span></button>`;
+const kLista=(arr,fn,max=12)=>arr.length?`<div class="kpi-l">${arr.slice(0,max).map(fn).join("")}</div>${arr.length>max?`<p class="kpi-n">e mais ${arr.length-max}. A lista completa está no semáforo das equipes e nos alertas.</p>`:""}`:`<p class="kpi-n">Nenhuma equipe.</p>`;
+const kPasso=(n,txt)=>`<li><span class="pn">${n}</span><span>${txt}</span></li>`;
+function kpiDetalhe(id){const list=KPI_LIST,k=kpiDados(list),rec=PROFILES[profile].label;let h="",t="",f="";
+  if(id==="media"){const z={};k.ok.forEach(x=>{const n=zone(pts(x)).name;z[n]=(z[n]||0)+1});const ord=[...k.ok].sort((a,b)=>pts(a)-pts(b));
+    const e=["e1","e2","e3"].map(c=>Math.round(k.ok.reduce((s,x)=>s+R(x)[c],0)/k.ok.length*10)/10);
+    t=`Pontuação média: ${k.avg} pontos`;
+    h=`<ol class="kpi-passos">${kPasso(1,`Pegamos as <b>${k.ok.length}</b> equipes com pontuação em ${CURC} no recorte (${rec}).`)}${kPasso(2,`${pl(list.length-k.ok.length,"Fica","Ficam")} fora ${list.length-k.ok.length} ${pl(list.length-k.ok.length,"equipe desclassificada ou sem registro","equipes desclassificadas ou sem registro")}: ausência de dado não entra como zero.`)}${kPasso(3,`Somamos a pontuação final de cada uma (Eixo 1 + Eixo 2 + Eixo 3) e dividimos por ${k.ok.length}.`)}${kPasso(4,`Comparamos com a média de ${PREVC} (${k.avgPrev} pontos, ${k.prevOk.length} equipes com dados naquele ciclo): ${deltaHtml(k.avg-k.avgPrev)}.`)}</ol>
+    <div class="kpi-g"><div><span class="eyebrow">Média por eixo</span><div class="kpi-eixos"><span>Eixo 1 · Autoavaliação<b class="num">${fmt(e[0])}</b><small>de ${BMAX.a+BMAX.b+BMAX.c}</small></span><span>Eixo 2 · Satisfação<b class="num">${fmt(e[1])}</b><small>de 200</small></span><span>Eixo 3 · Desempenho<b class="num">${fmt(e[2])}</b><small>de 600</small></span></div></div>
+    <div><span class="eyebrow">Equipes por zona</span><div class="kpi-zonas">${ZONES.map(([n,c])=>`<span class="zone ${c}">${n} <b>${z[n]||0}</b></span>`).join("")}</div></div></div>
+    <div><span class="eyebrow">Puxam a média para baixo</span>${kLista(ord.slice(0,3),x=>kEq(x,score(x)))}</div><div><span class="eyebrow">Puxam a média para cima</span>${kLista(ord.slice(-3).reverse(),x=>kEq(x,score(x)))}</div>`;
+    f=`Fonte: pontuação final do pipeline (Eixos 1, 2 e 3). Faixas: ${FONTE.zonas}.`}
+  if(id==="part"){const fora=list.filter(x=>status(x)!=="ok");t=`Participação: ${k.ok.length} de ${list.length} equipes`;
+    h=`<ol class="kpi-passos">${kPasso(1,`Contamos as equipes cadastradas no recorte: <b>${list.length}</b>.`)}${kPasso(2,`Destas, <b>${k.ok.length}</b> têm pontuação válida em ${CURC}.`)}${kPasso(3,`${pl(fora.length,"A outra foi desclassificada (recusou etapas ou não enviou dados) ou não aderiu ao ciclo, que é voluntário. Não entra","As outras "+fora.length+" foram desclassificadas (recusaram etapas ou não enviaram dados) ou não aderiram ao ciclo, que é voluntário. Não entram")} nas médias.`)}</ol>
+    <div><span class="eyebrow">Sem pontuação em ${CURC}</span>${kLista(fora,x=>{const lp=lastPrev(x);return kEq(x,`<span class="badge ${status(x)==="desclassificada"?"warn":"mute"}">${status(x)==="desclassificada"?"Desclassificada":"Não participou"}</span><small>último dado: ${lp?lp.c+" ("+Math.round(lp.s)+")":"nenhum"}</small>`)})}</div>`;
+    f="Regra: desclassificação e não participação são ausência de dado, nunca zero."}
+  if(id==="crit"){const ord=[...k.crit].sort((a,b)=>pts(a)-pts(b));const ent=k.crit.filter(x=>pts(x,PREVC)!=null&&pts(x,PREVC)>=CRIT),sai=k.ok.filter(x=>pts(x)>=CRIT&&pts(x,PREVC)!=null&&pts(x,PREVC)<CRIT),semAgora=k.critPrev.filter(x=>status(x)!=="ok"),novas=k.crit.filter(x=>pts(x,PREVC)==null);
+    const mov=[[ent.length,"entrou","entraram"],[sai.length,"saiu","saíram"],[semAgora.length,"ficou sem dados neste ciclo","ficaram sem dados neste ciclo"],[novas.length,"não tinha dados no ciclo anterior","não tinham dados no ciclo anterior"]].filter(x=>x[0]).map(([n,s,p])=>`${n} ${pl(n,s,p)}`);
+    t=`${k.crit.length} ${pl(k.crit.length,"equipe","equipes")} abaixo de ${CRIT} pontos`;
+    h=`<ol class="kpi-passos">${kPasso(1,`Abaixo de ${CRIT} pontos a equipe está nas zonas Crítica ou Insuficiente (${FONTE.zonas}).`)}${kPasso(2,`Usamos a pontuação sem arredondar: 599,9 conta como abaixo de 600.`)}${kPasso(3,`Em ${PREVC} eram <b>${k.critPrev.length}</b>. ${mov.length?"Da diferença: "+mov.join(", ")+".":"As mesmas equipes seguem abaixo do limite."}`)}</ol>
+    ${semAgora.length?`<div><span class="eyebrow">Estavam abaixo de ${CRIT} e ficaram sem dados</span>${kLista(semAgora,x=>kEq(x,`${Math.round(pts(x,PREVC))} em ${PREVC}`))}</div>`:""}
+    ${ent.length?`<div><span class="eyebrow">Entraram neste ciclo</span>${kLista(ent,x=>kEq(x,`${Math.round(pts(x,PREVC))} → <b>${score(x)}</b>`))}</div>`:""}
+    <div><span class="eyebrow">Todas abaixo de ${CRIT}</span>${kLista(ord,x=>kEq(x,`<b>${score(x)}</b> <span class="zone ${zone(pts(x)).cls}">${zone(pts(x)).name}</span>`))}</div>`;
+    f=`Cada equipe abaixo de ${CRIT} gera um alerta crítico com recomendação de visita técnica.`}
+  if(id==="queda"){const ord=[...k.drop].sort((a,b)=>delta(a).d-delta(b).d);t=`${k.drop.length} ${pl(k.drop.length,"queda","quedas")} de 60 pontos ou mais`;
+    h=`<ol class="kpi-passos">${kPasso(1,`Para cada uma das ${k.ok.length} equipes com pontuação em ${CURC}, comparamos com a pontuação de ${PREVC}.`)}${kPasso(2,`Equipes sem dado em ${PREVC} não entram: não há base de comparação.`)}${kPasso(3,`Contamos as que perderam 60 pontos ou mais. Quedas de 100 ou mais geram alerta crítico; de 60 a 100, alerta alto.`)}</ol>
+    <div><span class="eyebrow">Equipes com queda</span>${kLista(ord,x=>{const d=delta(x);return kEq(x,`${Math.round(pts(x,PREVC))} → <b>${score(x)}</b> ${deltaHtml(d.d)}`)})}</div>`;
+    f="Quedas de 30 a 60 pontos em equipes fora da excelência geram alerta de atenção, mas não entram neste número."}
+  if(id==="alertas"){const tipos=[["z","Zona crítica",`pontuação abaixo de ${CRIT}`],["d","Queda forte","60 pontos ou mais desde o ciclo anterior"],["p","Sem dados","desclassificada ou sem registro no ciclo"],["a","Bloco A inválido","pesquisa interna com adesão abaixo de 30%"],["t","Queda moderada","30 a 60 pontos, fora da excelência"],["n","NPS negativo","atributo com NPS abaixo de -20 (10+ respondentes)"]];
+    const tot=alerts(t=>list.includes(t)),fech=tot.length-k.al.length;t=`${k.al.length} ${pl(k.al.length,"alerta aberto","alertas abertos")}`;
+    h=`<ol class="kpi-passos">${kPasso(1,`O RASTRE.IA gerou <b>${tot.length}</b> ${pl(tot.length,"alerta","alertas")} para o recorte em ${CURC}, aplicando as regras abaixo a cada equipe.`)}${kPasso(2,`Descontamos ${fech} ${pl(fech,"tratado ou adiado","tratados ou adiados")}. Ficam ${k.al.length} abertos (pendentes, agendados ou em andamento).`)}</ol>
+    <table class="kpi-t"><thead><tr><th>Tipo</th><th>Regra</th><th class="num">Abertos</th><th class="num">Críticos</th></tr></thead><tbody>${tipos.map(([p,n,r])=>{const a=k.al.filter(x=>x.id[0]===p);return`<tr><td><b>${n}</b></td><td>${r}</td><td class="num">${a.length}</td><td class="num">${a.filter(x=>x.sev==="crit").length}</td></tr>`}).join("")}</tbody></table>`;
+    f="Uma equipe pode ter mais de um alerta. Na tela de Alertas eles aparecem agrupados por equipe."}
+  const acao={media:["Ver semáforo",()=>{const s=document.querySelector(".teams");if(s)s.scrollIntoView({behavior:"smooth"})}],part:["Ver sem dados",()=>{filterZone="sem dados";render()}],crit:["Ver alertas críticos",()=>{irAlertas({sev:"crit"});render();window.scrollTo(0,0)}],queda:["Ver alertas",()=>{irAlertas();render();window.scrollTo(0,0)}],alertas:["Ver alertas",()=>{irAlertas();render();window.scrollTo(0,0)}]}[id];
+  const semFiltro=profile==="central"&&id==="part";
+  track("kpi_detalhe",{kpi:id});
+  dlg(`<div class="dlg-h"><span class="eyebrow">${ic("info")}Como chegamos a este número</span><h2>${t}</h2><p class="sub">${rec} · ciclo ${CURC}</p></div><div class="dlg-b kpi-b">${h}<p class="kpi-f">${f}</p></div>
+  <div class="dlg-f"><button type="button" class="btn sm" data-kpi-perg>${ic("chat")}Perguntar ao assistente</button>${semFiltro?"":`<button type="button" class="btn sm" data-kpi-ir>${acao[0]}</button>`}<button type="button" class="btn sm pri" data-dlg-close>Fechar</button></div>`,d=>{
+    d.querySelectorAll("[data-kid]").forEach(b=>b.onclick=()=>{d.close();openTeam(+b.dataset.kid)});
+    const ir=d.querySelector("[data-kpi-ir]");if(ir)ir.onclick=()=>{d.close();acao[1]()};
+    d.querySelector("[data-kpi-perg]").onclick=()=>{d.close();view="chat";render();window.scrollTo(0,0)}})}
 
 /* ---------- render ---------- */
 function renderUser(){const P=PROFILES[profile];$("#usel-img").src=AVATARS[profile];$("#usel-n").textContent=P.n;$("#usel-r").textContent=P.r;
