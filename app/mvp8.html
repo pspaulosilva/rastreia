@@ -561,6 +561,20 @@ button.tile.kpi:hover .kpi-mais{opacity:1;text-decoration:underline}
 .kpi-t td{padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
 .kpi-t .num{text-align:right}
 @media print{.bemvindo,.bv-min,.kpi-mais{display:none!important}}
+/* calendário */
+.row3{display:grid;grid-template-columns:1.2fr .8fr 1.4fr;gap:12px}
+@media (max-width:600px){.row3{grid-template-columns:1fr 1fr}.row3>:last-child{grid-column:1/-1}}
+.calbtn{display:inline-flex;align-items:center;gap:4px;position:relative}
+.calbtn .cal-m summary{padding-left:8px;padding-right:8px}
+.cal-m .amenu-l{min-width:260px}
+.cal-h{display:block;padding:6px 12px 2px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.calrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);font-size:13px}
+.calrow>.ic{color:var(--accent-tx)}
+.calrow>span{flex:1;min-width:160px}
+.agi-w{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding-right:12px}
+.agi-w .agi{border-top:0;flex:1;min-width:0}
+@media (max-width:640px){.agi-w{flex-wrap:wrap;padding:0 0 10px}.agi-w .calbtn{margin-left:92px}}
+.settings .seg{flex-wrap:wrap}
 </style>
 <div class="band"></div>
 <div class="shell">
@@ -671,7 +685,7 @@ function alerts(scope){const list=[];for(const t of teams){if(!scope(t))continue
   if(d&&d.d<=-60)list.push({id:"d"+t.id,sev:d.d<=-100?"crit":"alto",team:t,t:`${nm} caiu ${fmt(Math.abs(d.d))} pontos desde ${d.from}`,w:`Agora em ${z.name.toLowerCase()} com ${s} pts.${pts(t)-d.d>=CRIT&&pts(t)<CRIT?" Mudou de zona.":""} ${b.av?"":"Bloco A inválido neste ciclo contribui para a queda."}`,act:"Enviar recomendações",score:Math.abs(d.d)*3});
   else if(d&&d.d<=-30&&pts(t)<ZONES[1][2])list.push({id:"t"+t.id,sev:"aten",team:t,t:`${nm}: queda de ${fmt(Math.abs(d.d))} pontos desde ${d.from}`,w:`Em ${z.name.toLowerCase()}. NPS médio ${b.nps}.`,act:"Acompanhar",score:Math.abs(d.d)});
   if(!b.av)list.push({id:"a"+t.id,sev:"aten",team:t,t:`${nm}: pesquisa interna com adesão abaixo de 30%`,w:`Bloco A não computado (taxa ${b.tx!=null?Math.round(b.tx*100)+"%":"inválida"}). A equipe perde até ${BMAX.a} pontos por baixa participação, não por desempenho.`,act:"Orientar equipe",score:90});
-  const neg=b.attrs.filter(a=>a.v!=null&&a.v<-20&&a.nr>=10).sort((x,y)=>x.v-y.v)[0];if(neg&&s>=CRIT)list.push({id:"n"+t.id,sev:"aten",team:t,t:`${nm}: NPS ${neg.v} em "${neg.n}"`,w:`${neg.nr} respondentes no ciclo. Eixo 2 em ${b.e2} de 200.`,act:"Ver atributos",score:60+Math.abs(neg.v)});}
+  const neg=b.attrs.filter(a=>a.v!=null&&a.v<-20&&a.nr>=10).sort((x,y)=>x.v-y.v)[0];if(neg&&s>=CRIT)list.push({id:"n"+t.id,sev:"aten",team:t,t:`${nm}: NPS ${fmt(neg.v)} em "${neg.n}"`,w:`${neg.nr} respondentes no ciclo. Eixo 2 em ${b.e2} de 200.`,act:"Ver atributos",score:60+Math.abs(neg.v)});}
   return list.sort((a,b)=>b.score-a.score)}
 /* ---------- estado ---------- */
 let profile="distrital",view="painel",selTeam=null,filterZone="todas",distFilter=null;
@@ -686,7 +700,7 @@ applyTheme();
 const NAV=[["painel","Painel","M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"],["alertas","Alertas","M12 22a2 2 0 0 0 2-2h-4a2 2 0 0 0 2 2zm6-6V11c0-3.07-1.63-5.64-4.5-6.32V4a1.5 1.5 0 0 0-3 0v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"],["planos","Planos de ação","M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zm-7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm-2 14l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"],["resumo","Resumo do quadrimestre","M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"],["chat","Assistente","M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"],["qualidade","Qualidade dos dados","M12 2L4 5v6c0 5.55 3.84 10.74 8 12 4.16-1.26 8-6.45 8-12V5l-8-3zm-1 14l-4-4 1.41-1.41L11 13.17l5.59-5.59L18 9l-7 7z"],["analise","Análise exploratória","M3 3v18h18v-2H5V3H3zm4 12h2v3H7v-3zm4-5h2v8h-2v-8zm4 3h2v5h-2v-5zm4-7h2v12h-2V6z"],["uso","Uso e feedback","M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"],["config","Configurações","M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58a.49.49 0 0 0 .12-.61l-1.92-3.32a.488.488 0 0 0-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54a.484.484 0 0 0-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58a.49.49 0 0 0-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"]];
 const $=s=>document.querySelector(s);
 const fmt=n=>n.toLocaleString("pt-BR");
-const deltaHtml=d=>d==null?`<span class="delta flat">sem base</span>`:`<span class="delta num ${d>0?"up":d<0?"down":"flat"}">${d>0?"▲ +":d<0?"▼ ":"● "}${Math.abs(d)}</span>`;
+const deltaHtml=d=>d==null?`<span class="delta flat">sem base</span>`:`<span class="delta num ${d>0?"up":d<0?"down":"flat"}">${d>0?"▲ +":d<0?"▼ ":"● "}${fmt(Math.abs(d))}</span>`;
 function toast(m,undo){const t=$("#toast");t.textContent=m;if(undo){const b=document.createElement("button");b.className="toast-undo";b.textContent="Desfazer";b.onclick=()=>{undo();t.classList.remove("show")};t.appendChild(b)}t.classList.add("show");clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove("show"),undo?6000:2600)}
 function spark(h,w=200,ht=28){const pts=h.map((v,i)=>[v,i]).filter(x=>x[0]!=null);if(pts.length<2)return`<svg class="spark" viewBox="0 0 ${w} ${ht}"></svg>`;const vals=pts.map(p=>p[0]);const mn=Math.min(...vals)-20,mx=Math.max(...vals)+20;const P=pts.map(([v,i])=>[i/(h.length-1)*(w-6)+3,ht-3-(v-mn)/(mx-mn)*(ht-6)]);const d=P.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");const last=P[P.length-1];const dd=vals[vals.length-1]-vals[vals.length-2];const col=dd<-30?"var(--serious)":dd>30?"var(--good)":"var(--muted)";
   return`<svg class="spark" viewBox="0 0 ${w} ${ht}" preserveAspectRatio="none" aria-hidden="true"><path d="${d}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round"/><circle cx="${last[0]}" cy="${last[1]}" r="3" fill="${col}"/></svg>`}
@@ -920,6 +934,7 @@ function vConfig(){const P=PROFILES[profile];const I={auto:"M12 2a10 10 0 1 0 0 
   const sw=(k,t,w)=>`<div class="card setting"><div><div class="t">${t}</div><div class="w">${w}</div></div><button class="switch ${prefs[k]?"on":""}" data-pref="${k}" role="switch" aria-checked="${prefs[k]}" aria-label="${t}"></button></div>`;
   return header("Configurações",`${P.n} · perfil ${profile}`)+`<div class="settings">
   <div class="card setting"><div><div class="t">Aparência</div><div class="w">Tema claro, escuro ou seguir a preferência do sistema. A escolha fica salva neste navegador.</div></div><div class="seg" role="group" aria-label="Tema">${opt("auto","Automático")}${opt("light","Claro")}${opt("dark","Escuro")}</div></div>
+  <div class="card setting"><div><div class="t">Calendário</div><div class="w">Onde as visitas técnicas agendadas são adicionadas. O evento abre preenchido com data, horário, local, alertas e responsável. "Outros" baixa um arquivo .ics, que Apple Calendário, Thunderbird e celulares importam.</div></div><div class="seg" role="group" aria-label="Calendário">${[["","Perguntar"],["google","Google"],["outlook","Outlook.com"],["m365","Microsoft 365"],["ics","Outros (.ics)"]].map(([k,l])=>`<button class="${calPref()===k?"on":""}" data-calpref="${k}" aria-pressed="${calPref()===k}">${l}</button>`).join("")}</div></div>
   <h2 style="margin-top:8px">Parâmetros do programa</h2>
   <div class="card setting"><div><div class="t">Conjunto de parâmetros</div><div class="w">Manual de Avaliação (900/800/600/400; A40/B80/C80) ou dicionário da base sintética (850/700/550/400; A80/B60/C60). A divergência entre as fontes aguarda definição do professor e do NIIMA. Os dois pacotes vêm do mesmo pipeline: <code>preparar_dados.py --pacote v6</code>.</div></div><div class="seg" role="group" aria-label="Parâmetros">${["manual","dicionario"].map(k=>`<button class="${MODO===k?"on":""}" data-modo="${k}" aria-pressed="${MODO===k}">${k==="manual"?"Manual":"Dicionário"}</button>`).join("")}</div></div>
   <div class="card setting"><div><div class="t">Zonas de classificação</div><div class="w">${ZONES.slice(0,4).map(z=>`${z[0]} ≥ ${z[2]}`).join(" · ")} · Insuficiente < ${ZONES[3][2]}. Fonte: ${FONTE.zonas}.</div></div><span class="badge info">${FONTE.curto}</span></div>
@@ -987,7 +1002,7 @@ function abrirAcomp(id,foco){const a=alerts(PROFILES[profile].scope).find(x=>x.i
   dlg(`<div class="dlg-h"><span class="sev sev-${a.sev}">${S[a.sev]}</span><h2>${a.t}</h2><p class="sub">${a.team.usf} · ${dsShort(a.team.ds)} · acompanhamento do alerta</p></div>
   <div class="dlg-b">
    <div class="fld"><span>${ic("clock")}Situação</span><div class="seg" role="group" aria-label="Situação">${Object.entries(AST).map(([k,l])=>`<button type="button" class="${alertSt(id)===k?"on":""}" data-ast="${k}" aria-pressed="${alertSt(id)===k}">${l}</button>`).join("")}</div></div>
-   <div class="row2"><label class="fld"><span>${ic("event")}Data da visita técnica</span><input type="date" id="ac-ag" value="${A.ag}"></label><label class="fld"><span>${ic("person")}Responsável</span><input id="ac-resp" value="${esc(A.resp)}" placeholder="Ex.: apoiador distrital" autocomplete="off"></label></div>
+   <div class="row3"><label class="fld"><span>${ic("event")}Data da visita técnica</span><input type="date" id="ac-ag" value="${A.ag}"></label><label class="fld"><span>${ic("clock")}Horário (opcional)</span><input type="time" id="ac-hora" value="${A.hora||""}"></label><label class="fld"><span>${ic("person")}Responsável</span><input id="ac-resp" value="${esc(A.resp)}" placeholder="Ex.: apoiador distrital" autocomplete="off"></label></div>
    ${acExtra(a,A)}<div class="fld"><span>${ic("edit")}Observações</span>${A.obs.length?`<ul class="obsl">${A.obs.map(o=>`<li><small>${fhora(o.d)} · ${esc(o.quem)}</small>${esc(o.txt).replace(/\n/g,"<br>")}</li>`).join("")}</ul>`:""}<textarea id="ac-obs" rows="3" placeholder="Combinado com a equipe, pendências ou resultado da visita">${esc(acDraft[id]||"")}</textarea><button type="button" class="btn sm up" id="ac-obs-add">Adicionar observação</button></div>
    <div class="fld"><span>${ic("attach")}Relatório de visita técnica</span>${A.anx.length?`<ul class="anxl">${A.anx.map((x,i)=>`<li><span>${ic("attach")}<b>${esc(x.nome)}</b><small>${ftam(x.tam)} · ${fhora(x.d)} · ${esc(x.quem)}</small></span><span>${x.url?`<a class="btn sm" href="${x.url}" download="${esc(x.nome)}">Baixar</a>`:`<span class="badge mute" title="Arquivo acima de 1 MB: no protótipo só o registro é guardado">só registro</span>`}<button type="button" class="btn sm" data-anx-rm="${i}">Remover</button></span></li>`).join("")}</ul>`:""}<label class="btn sm up">${ic("attach")}Anexar relatório<input type="file" id="ac-file" accept=".pdf,.doc,.docx,.odt,.jpg,.jpeg,.png" hidden></label><small class="hint">PDF, Word ou imagem. No protótipo o arquivo fica neste navegador (até 1 MB; acima disso só o registro).</small></div>
    ${A.hist.length?`<details class="fld"><summary>Histórico (${A.hist.length})</summary><ul class="obsl">${[...A.hist].reverse().map(h=>`<li><small>${fhora(h.d)} · ${esc(h.quem)}</small>${esc(h.txt)}</li>`).join("")}</ul></details>`:""}
@@ -996,6 +1011,7 @@ function abrirAcomp(id,foco){const a=alerts(PROFILES[profile].scope).find(x=>x.i
    const reabrir=()=>{render();abrirAcomp(id)};
    const log=txt=>A.hist.push({d:Date.now(),quem:quem(),txt});
    d.querySelectorAll("[data-ast]").forEach(b=>b.onclick=()=>{if(b.dataset.ast==="done"&&alertSt(id)!=="done"){tratarAlerta(id,reabrir);return}setAlertSt(id,b.dataset.ast);reabrir()});
+   const hrI=d.querySelector("#ac-hora");hrI.onchange=()=>{if((A.hora||"")===hrI.value)return;A.hora=hrI.value;log(hrI.value?`Horário da visita: ${hrI.value}`:"Horário da visita removido");salvarStore();reabrir()};
    const ag=d.querySelector("#ac-ag");ag.onchange=()=>{const v=ag.value;if(v===A.ag)return;log(v?`Visita técnica agendada para ${fdata(v)}`:"Data da visita removida");A.ag=v;if(v&&alertSt(id)==="aberto")A.st="agendado";salvarStore();reabrir();toast(v?`Visita técnica agendada para ${fdata(v)}.`:"Data da visita removida.")};
    const rp=d.querySelector("#ac-resp");rp.onchange=()=>{const v=rp.value.trim();if(v===A.resp)return;log(`Responsável: ${v||"removido"}`);A.resp=v;salvarStore();render()};
    const ob=d.querySelector("#ac-obs");ob.oninput=()=>acDraft[id]=ob.value;
@@ -1201,14 +1217,14 @@ function agendaHtml(){const al=escopoAgenda(),h=hoje(),vs=visitas(al),DS=["dom",
   const B=[["Atrasadas",v=>v.d<h],["Esta semana",v=>v.d>=h&&v.d<=s1],["Próxima semana",v=>v.d>s1&&v.d<=s2],["Depois",v=>v.d>s2]];
   const sem=new Set(al.filter(a=>isOpen(a.id)&&!agDe(a)&&a.sev==="crit").map(a=>a.team.id)).size;
   const item=v=>{const sv=["crit","alto","aten"].find(s=>v.g.some(a=>a.sev===s)),rp=v.g.map(a=>ST.alertas[a.id].resp).find(Boolean);
-    return`<button class="agi" data-acomp="${v.g[0].id}" data-foco="obs"><span class="agi-d ${v.d<h?"late":""}"><b>${v.d.slice(8,10)}/${v.d.slice(5,7)}</b><small>${DS[new Date(v.d+"T12:00:00Z").getUTCDay()]}</small></span><span class="agi-t"><b>${v.t.nome}</b><small>${v.t.usf}${profile==="central"?" · "+dsShort(v.t.ds):""} · ${v.g.length} ${pl(v.g.length,"alerta","alertas")}${rp?" · Resp.: "+esc(rp):""}</small></span><span class="sev sev-${sv}">${SEVL[sv]}</span></button>`};
-  return`<section class="card"><div class="agbar">${profile==="central"?`<label class="af"><span>${ic("place")}Distrito</span><select class="an-sel" data-af="ds">${[["","Todos"],...DISTRICTS.map(d=>[d,dsShort(d)])].map(([v,l])=>`<option value="${v}" ${AF.ds===v?"selected":""}>${l}</option>`).join("")}</select></label>`:""}<span class="hint">${vs.length} ${pl(vs.length,"visita agendada","visitas agendadas")} · semana de segunda a domingo</span><div class="af-btns"><button class="btn sm" id="ag-ics" ${vs.length?"":"disabled"} title="Arquivo de calendário para Outlook, Google Agenda ou celular">${ic("download")}Exportar agenda (.ics)</button></div></div>
+    const hr=v.g.map(a=>ST.alertas[a.id].hora).find(Boolean);
+    return`<div class="agi-w"><button class="agi" data-acomp="${v.g[0].id}" data-foco="obs"><span class="agi-d ${v.d<h?"late":""}"><b>${v.d.slice(8,10)}/${v.d.slice(5,7)}</b><small>${DS[new Date(v.d+"T12:00:00Z").getUTCDay()]}${hr?" "+hr:""}</small></span><span class="agi-t"><b>${v.t.nome}</b><small>${v.t.usf}${profile==="central"?" · "+dsShort(v.t.ds):""} · ${v.g.length} ${pl(v.g.length,"alerta","alertas")}${rp?" · Resp.: "+esc(rp):""}</small></span><span class="sev sev-${sv}">${SEVL[sv]}</span></button>${calMenu(v.t.id+"|"+v.d)}</div>`};
+  return`<section class="card"><div class="agbar">${profile==="central"?`<label class="af"><span>${ic("place")}Distrito</span><select class="an-sel" data-af="ds">${[["","Todos"],...DISTRICTS.map(d=>[d,dsShort(d)])].map(([v,l])=>`<option value="${v}" ${AF.ds===v?"selected":""}>${l}</option>`).join("")}</select></label>`:""}<span class="hint">${vs.length} ${pl(vs.length,"visita agendada","visitas agendadas")} · semana de segunda a domingo</span><div class="af-btns"><button class="btn sm" id="ag-ics" ${vs.length?"":"disabled"} title="Todas as visitas em um arquivo para Outlook, Google Agenda, Apple Calendário ou celular">${ic("download")}Exportar todas (.ics)</button></div></div>
   ${sem?`<div style="padding:12px 16px 0"><div class="aviso">${ic("error")}${sem} ${pl(sem,"equipe com alerta crítico ainda sem","equipes com alerta crítico ainda sem")} visita agendada. <button class="lnk" id="ag-sem">Ver na lista</button></div></div>`:""}
   ${vs.length?B.map(([l,f])=>{const x=vs.filter(f);return x.length?`<div class="agsec"><h3>${l}<span class="badge ${l==="Atrasadas"?"late":""}">${x.length}</span></h3>${x.map(item).join("")}</div>`:""}).join(""):`<div class="empty">Nenhuma visita técnica agendada.<br>Abra um alerta na lista e defina a data da visita; ela aparece aqui.</div>`}</section>`}
 const icsT=s=>String(s).replace(/([,;\\])/g,"\\$1").replace(/\n/g," ");
-function exportarAgenda(){const vs=visitas(escopoAgenda()),dt=iso=>iso.replace(/-/g,""),agora=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
-  const ev=vs.map(v=>["BEGIN:VEVENT",`UID:${v.d}-${v.t.id}@rastreia`,`DTSTAMP:${agora}`,`DTSTART;VALUE=DATE:${dt(v.d)}`,`DTEND;VALUE=DATE:${dt(somaDias(v.d,1))}`,`SUMMARY:${icsT("Visita técnica: "+v.t.nome)}`,`LOCATION:${icsT(v.t.usf)}`,`DESCRIPTION:${icsT(v.g.map(a=>a.t).join(" | ")+" (RASTRE.IA, dados simulados)")}`,"END:VEVENT"].join("\r\n"));
-  baixar(`rastreia_agenda_${profile}_${hoje()}.ics`,["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//RASTRE.IA//Prototipo 8//PT-BR",...ev,"END:VCALENDAR"].join("\r\n"),"text/calendar;charset=utf-8");track("exportar_agenda",{n:vs.length});toast(`${vs.length} ${pl(vs.length,"visita exportada","visitas exportadas")} para o calendário.`)}
+function exportarAgenda(){const vs=visitas(escopoAgenda());
+  baixar(`rastreia_agenda_${profile}_${hoje()}.ics`,icsCal(vs.map(v=>eventoVisita(v.t.id+"|"+v.d))),"text/calendar;charset=utf-8");track("exportar_agenda",{n:vs.length});toast(`${vs.length} ${pl(vs.length,"visita exportada","visitas exportadas")} para o calendário.`)}
 function vAlertas(){const P=PROFILES[profile];const al=alerts(P.scope),h=hoje();const n=f=>al.filter(f).length;
   let list=al.filter(alertFiltro);if(AF.ord==="ag")list=[...list].sort((x,y)=>(agDe(x)||"9999").localeCompare(agDe(y)||"9999"));
   const filtrado=Object.keys(AF0).some(k=>k!=="ord"&&AF[k]!==AF0[k]);
@@ -1229,12 +1245,12 @@ function agendarEquipe(tid){const t=teams.find(x=>x.id===+tid),al=alerts(PROFILE
   const cur=al.map(agDe).filter(Boolean).sort()[0]||"",resp=al.map(a=>(ST.alertas[a.id]||{}).resp).find(Boolean)||"";
   dlg(`<div class="dlg-h"><h2>${ic("event")}Visita única: ${t.nome}</h2><p class="sub">${t.usf} · a mesma data vale para os ${al.length} alertas abertos da equipe</p></div>
   <div class="dlg-b"><ul class="obsl">${al.map(a=>`<li><span class="sev sev-${a.sev}">${SEVL[a.sev]}</span> ${curto(a)}</li>`).join("")}</ul>
-   <div class="row2"><label class="fld"><span>${ic("event")}Data da visita técnica</span><input type="date" id="ge-ag" value="${cur}"></label><label class="fld"><span>${ic("person")}Responsável</span><input id="ge-resp" value="${esc(resp)}" placeholder="Ex.: apoiador distrital" autocomplete="off"></label></div></div>
+   <div class="row3"><label class="fld"><span>${ic("event")}Data da visita técnica</span><input type="date" id="ge-ag" value="${cur}"></label><label class="fld"><span>${ic("clock")}Horário (opcional)</span><input type="time" id="ge-hora" value="${al.map(a=>(ST.alertas[a.id]||{}).hora).find(Boolean)||""}"></label><label class="fld"><span>${ic("person")}Responsável</span><input id="ge-resp" value="${esc(resp)}" placeholder="Ex.: apoiador distrital" autocomplete="off"></label></div></div>
   <div class="dlg-f"><button type="button" class="btn sm" data-dlg-close>Cancelar</button><button type="button" class="btn sm pri" id="ge-ok">Agendar para os ${al.length} alertas</button></div>`,d=>{
    const ag=d.querySelector("#ge-ag");
-   d.querySelector("#ge-ok").onclick=()=>{const v=ag.value,r=d.querySelector("#ge-resp").value.trim();if(!v){ag.focus();return}
-     al.forEach(a=>{const A=acomp(a.id),log=txt=>A.hist.push({d:Date.now(),quem:quem(),txt});if(A.ag!==v){A.ag=v;log(`Visita técnica agendada para ${fdata(v)} (visita única da equipe)`)}if(r&&A.resp!==r){A.resp=r;log(`Responsável: ${r}`)}if(alertSt(a.id)==="aberto")A.st="agendado"});
-     salvarStore();track("visita_unica",{n:al.length});d.close();render();toast(`Visita de ${fdata(v)} vale para os ${al.length} alertas de ${t.nome}.`)};
+   d.querySelector("#ge-ok").onclick=()=>{const v=ag.value,r=d.querySelector("#ge-resp").value.trim(),hr=d.querySelector("#ge-hora").value;if(!v){ag.focus();return}
+     al.forEach(a=>{const A=acomp(a.id),log=txt=>A.hist.push({d:Date.now(),quem:quem(),txt});if(A.ag!==v){A.ag=v;log(`Visita técnica agendada para ${fdata(v)} (visita única da equipe)`)}if(r&&A.resp!==r){A.resp=r;log(`Responsável: ${r}`)}if((A.hora||"")!==hr){A.hora=hr;if(hr)log(`Horário da visita: ${hr}`)}if(alertSt(a.id)==="aberto")A.st="agendado"});
+     salvarStore();track("visita_unica",{n:al.length});d.close();render();ofertaCal(t.id+"|"+v,`Visita agendada para os ${al.length} alertas`)};
    ag.focus()})}
 /* ao tratar, pede a nota de resolução; ela fica no histórico e na exportação */
 const RESOL=["Visita técnica realizada","Equipe orientada","Plano de ação revisado","Dado corrigido na base","Sem ação necessária"];
@@ -1251,7 +1267,7 @@ function tratarAlerta(id,depois){const a=alerts(PROFILES[profile].scope).find(x=
    tx.focus()})}
 /* trecho extra da janela de acompanhamento: nota de resolução e aviso de visita já marcada por outro alerta da equipe */
 function acExtra(a,A){const outra=A.ag?"":alerts(PROFILES[profile].scope).filter(x=>x.team.id===a.team.id&&x.id!==a.id&&isOpen(x.id)).map(agDe).filter(Boolean).sort()[0];
-  return(A.nota&&alertSt(a.id)==="done"?`<div class="anota">${ic("check")}Resolução: ${esc(A.nota)}</div>`:"")+(outra?`<div class="aviso">${ic("event")}Esta equipe já tem visita em ${fdata(outra)} por outro alerta. <button type="button" class="lnk" id="ac-mesma" data-dia="${outra}">Usar a mesma data</button></div>`:"")}
+  return(A.ag&&isOpen(a.id)?`<div class="calrow">${ic("event")}<span>Visita em <b>${fdata(A.ag)}</b>${A.hora?" às "+A.hora:", dia inteiro"}.</span>${calMenu(a.team.id+"|"+A.ag,true)}</div>`:"")+(A.nota&&alertSt(a.id)==="done"?`<div class="anota">${ic("check")}Resolução: ${esc(A.nota)}</div>`:"")+(outra?`<div class="aviso">${ic("event")}Esta equipe já tem visita em ${fdata(outra)} por outro alerta. <button type="button" class="lnk" id="ac-mesma" data-dia="${outra}">Usar a mesma data</button></div>`:"")}
 
 /* ---------- v8: planos de ação com busca, filtros e paginação ---------- */
 const PF0={q:"",mat:0,cic:"rec",ds:""};const PF={...PF0,lim:20};
@@ -1310,7 +1326,8 @@ function bindV8(m){
   const pm=$("#pf-mais");if(pm)pm.onclick=()=>{PF.lim+=20;render()};
   const pc=$("#pf-csv");if(pc)pc.onclick=exportarPlanosFiltro;
   m.querySelectorAll("[data-sec]").forEach(el=>{const alvo=document.getElementById(el.dataset.sec);if(!alvo){el.remove();return}el.onclick=()=>alvo.scrollIntoView({behavior:"smooth",block:"start"})});
-  const pdf=$("#res-pdf");if(pdf)pdf.onclick=imprimirResumo}
+  const pdf=$("#res-pdf");if(pdf)pdf.onclick=imprimirResumo;
+  m.querySelectorAll("[data-calpref]").forEach(el=>el.onclick=()=>{setCalPref(el.dataset.calpref);track("calendario_pref",{cal:el.dataset.calpref||"perguntar"});toast(el.dataset.calpref?`Visitas vão para o ${CAL_CURTO[el.dataset.calpref]}.`:"O RASTRE.IA vai perguntar o calendário a cada visita.");render()})}
 
 /* recomendação de cada tipo de alerta, mostrada no corpo do alerta (o botão traz só a ação) */
 const RECO={p:"contatar a unidade para entender a ausência de dados no ciclo",z:"visita técnica à equipe para tratar os indicadores do Eixo 3",d:"enviar à equipe recomendações sobre os indicadores que caíram",t:"acompanhar a evolução da equipe no próximo ciclo",a:"orientar a equipe sobre a adesão à pesquisa interna (mínimo de 30%)",n:"analisar os atributos com NPS negativo na página da equipe"};
@@ -1401,6 +1418,48 @@ function kpiDetalhe(id){const list=KPI_LIST,k=kpiDados(list),rec=PROFILES[profil
     d.querySelectorAll("[data-kid]").forEach(b=>b.onclick=()=>{d.close();openTeam(+b.dataset.kid)});
     const ir=d.querySelector("[data-kpi-ir]");if(ir)ir.onclick=()=>{d.close();acao[1]()};
     d.querySelector("[data-kpi-perg]").onclick=()=>{d.close();view="chat";render();window.scrollTo(0,0)}})}
+
+/* ---------- v8: visita no calendário do usuário (Google, Outlook.com, Microsoft 365 ou .ics para Apple e outros) ---------- */
+/* no protótipo o evento é aberto já preenchido no calendário escolhido; em produção a mesma função passa a gravar pela API (Google Calendar / Microsoft Graph) */
+const CALS={google:"Google Agenda",outlook:"Outlook.com",m365:"Outlook / Microsoft 365",ics:"Apple Calendário e outros (.ics)"};
+const CAL_CURTO={google:"Google Agenda",outlook:"Outlook",m365:"Microsoft 365",ics:"calendário (.ics)"};
+const calPref=()=>{try{const k=localStorage.getItem("rastreia.cal");return CALS[k]?k:""}catch(e){return""}};
+function setCalPref(k){if(k)lsSet("rastreia.cal",k);else try{localStorage.removeItem("rastreia.cal")}catch(e){}}
+/* evento da visita: uma por equipe e data, reunindo os alertas abertos daquela data */
+function eventoVisita(chave){const[tid,d]=chave.split("|"),t=teams.find(x=>x.id===+tid);if(!t||!d)return null;
+  const g=alerts(PROFILES[profile].scope).filter(a=>a.team.id===t.id&&isOpen(a.id)&&agDe(a)===d);
+  const hr=g.map(a=>(ST.alertas[a.id]||{}).hora).find(Boolean)||"",rp=g.map(a=>(ST.alertas[a.id]||{}).resp).find(Boolean)||"";
+  const desc=[`Visita técnica à ${t.nome} (${t.usf}, ${dsShort(t.ds)}).`,g.length?"Alertas:\n"+g.map(a=>"- "+txtPuro(a.t)).join("\n"):"",rp?"Responsável: "+rp:"","Registrado no RASTRE.IA (protótipo, dados simulados)."].filter(Boolean).join("\n\n");
+  return{uid:`${d}-${t.id}@rastreia`,d,hr,tit:`Visita técnica: ${t.nome}`,loc:`${t.usf} · ${dsShort(t.ds)}`,desc}}
+/* início e fim no horário local (2 horas) ou dia inteiro sem horário */
+function calHoras(ev){if(!ev.hr)return null;const[h,m]=ev.hr.split(":").map(Number),ini=new Date(Date.UTC(+ev.d.slice(0,4),+ev.d.slice(5,7)-1,+ev.d.slice(8,10),h,m)),fim=new Date(ini.getTime()+2*3600e3);
+  const iso=x=>x.toISOString().slice(0,19);return{ini:iso(ini),fim:iso(fim)}}
+function calUrl(k,ev){const H=calHoras(ev),q=o=>Object.entries(o).map(([a,b])=>a+"="+encodeURIComponent(b)).join("&");
+  if(k==="google"){const c=s=>s.replace(/[-:]/g,""),dates=H?`${c(H.ini)}/${c(H.fim)}`:`${c(ev.d)}/${c(somaDias(ev.d,1))}`;
+    return"https://calendar.google.com/calendar/render?"+q({action:"TEMPLATE",text:ev.tit,dates,ctz:"America/Recife",details:ev.desc,location:ev.loc})}
+  const base=k==="m365"?"https://outlook.office.com/calendar/0/action/compose?":"https://outlook.live.com/calendar/0/action/compose?";
+  return base+q({subject:ev.tit,startdt:H?H.ini:ev.d,enddt:H?H.fim:somaDias(ev.d,1),allday:H?"false":"true",body:ev.desc,location:ev.loc})}
+/* .ics: horário convertido para UTC (Recife é UTC-3 o ano todo), texto escapado e linhas dobradas em 60 caracteres (RFC 5545) */
+const icsTx=s=>String(s).replace(/([,;\\])/g,"\\$1").replace(/\n/g,"\\n");
+const icsDobra=l=>{const o=[];for(let i=0;i<l.length;i+=60)o.push((i?" ":"")+l.slice(i,i+60));return o.join("\r\n")};
+function icsEvento(ev){const dt=s=>s.replace(/[-:]/g,""),H=calHoras(ev),utc=s=>new Date(Date.parse(s+"Z")+3*3600e3).toISOString().replace(/[-:]/g,"").slice(0,15)+"Z",agora=new Date().toISOString().replace(/[-:]/g,"").slice(0,15)+"Z";
+  return["BEGIN:VEVENT",`UID:${ev.uid}`,`DTSTAMP:${agora}`,...(H?[`DTSTART:${utc(H.ini)}`,`DTEND:${utc(H.fim)}`]:[`DTSTART;VALUE=DATE:${dt(ev.d)}`,`DTEND;VALUE=DATE:${dt(somaDias(ev.d,1))}`]),`SUMMARY:${icsTx(ev.tit)}`,`LOCATION:${icsTx(ev.loc)}`,`DESCRIPTION:${icsTx(ev.desc)}`,"END:VEVENT"].map(icsDobra).join("\r\n")}
+const icsCal=evs=>["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//RASTRE.IA//Prototipo 8//PT-BR",...evs.map(icsEvento),"END:VCALENDAR"].join("\r\n");
+function abrirCal(k,chave){const ev=eventoVisita(chave);if(!ev)return;track("calendario",{cal:k});
+  if(k==="ics"){baixar(`visita_${ev.d}_${chave.split("|")[0]}.ics`,icsCal([ev]),"text/calendar;charset=utf-8");toast("Arquivo da visita baixado: abra para adicionar ao seu calendário.");return}
+  const w=window.open(calUrl(k,ev),"_blank","noopener");toast(w===null?"O navegador bloqueou a nova aba. Libere pop-ups para o RASTRE.IA.":`Evento aberto no ${CAL_CURTO[k]}, já preenchido: confira e salve.`)}
+/* botão com o calendário preferido e menu para escolher outro; a escolha fica lembrada */
+function calMenu(chave,pri){const p=calPref();
+  return`<div class="calbtn"><button type="button" class="btn sm ${pri?"pri":""}" ${p?`data-cal="${chave}" data-calk="${p}"`:`data-calabre`}>${ic("event")}${p?"Adicionar ao "+CAL_CURTO[p]:"Adicionar ao meu calendário"}</button><details class="amenu cal-m"><summary class="btn sm" aria-label="Escolher calendário" title="Escolher calendário">▾</summary><div class="amenu-l"><small class="cal-h">Seu calendário</small>${Object.entries(CALS).map(([k,l])=>`<button type="button" data-cal="${chave}" data-calk="${k}">${k===p?ic("check"):ic("event")}${l}</button>`).join("")}</div></details></div>`}
+function ofertaCal(chave,msg){const ev=eventoVisita(chave);if(!ev)return;
+  dlg(`<div class="dlg-h"><span class="eyebrow">${ic("check")}${msg}</span><h2>${ev.tit}</h2><p class="sub">${fdata(ev.d)}${ev.hr?" às "+ev.hr:" · dia inteiro"} · ${ev.loc}</p></div>
+  <div class="dlg-b"><p class="hint">Leve a visita para o seu calendário: o evento abre preenchido com data, local, alertas e responsável. Funciona com Google Agenda, Outlook, Microsoft 365, Apple Calendário e qualquer calendário que importe .ics.</p>${calMenu(chave,true)}</div>
+  <div class="dlg-f"><button type="button" class="btn sm" data-dlg-close>Agora não</button></div>`)}
+/* um único ouvinte serve página, janelas e agenda */
+document.addEventListener("click",e=>{const ab=e.target.closest("[data-calabre]");if(ab){e.preventDefault();e.stopPropagation();const m=ab.parentElement.querySelector("details");if(m)m.open=!m.open;return}
+  const b=e.target.closest("[data-cal]");if(!b)return;e.preventDefault();e.stopPropagation();const k=b.dataset.calk;if(!calPref()||b.closest(".amenu-l"))setCalPref(k);
+  const d=b.closest("details");if(d)d.open=false;abrirCal(k,b.dataset.cal);
+  const box=b.closest(".calbtn");if(box){const n=document.createElement("div");n.innerHTML=calMenu(b.dataset.cal,box.querySelector(".btn.pri")!==null);box.replaceWith(n.firstElementChild)}},true);
 
 /* ---------- render ---------- */
 function renderUser(){const P=PROFILES[profile];$("#usel-img").src=AVATARS[profile];$("#usel-n").textContent=P.n;$("#usel-r").textContent=P.r;
