@@ -489,6 +489,12 @@ html,body{background:#fff!important}
 .tbl-wrap{overflow:visible}
 tr.so-pdf{display:table-row}
 }
+/* fundo azul com texto branco: tom mais escuro para contraste AA (4,9:1) */
+:root{--accent-bg:#4666E6}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--accent-bg:var(--accent)}}
+:root[data-theme="dark"]{--accent-bg:var(--accent)}
+.proto-banner,.nav button.on,.btn.pri,.rec .n,th,.msg.u,.seg button.on,.usel-menu button.on .lvl,.an-seg button.on,.fb-fab,.pin.tmp{background:var(--accent-bg)}
+.btn.pri{border-color:var(--accent-bg)}
 </style>
 <div class="band"></div>
 <div class="shell">
