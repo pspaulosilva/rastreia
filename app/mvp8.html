@@ -495,6 +495,15 @@ tr.so-pdf{display:table-row}
 :root[data-theme="dark"]{--accent-bg:var(--accent)}
 .proto-banner,.nav button.on,.btn.pri,.rec .n,th,.msg.u,.seg button.on,.usel-menu button.on .lvl,.an-seg button.on,.fb-fab,.pin.tmp{background:var(--accent-bg)}
 .btn.pri{border-color:var(--accent-bg)}
+/* selos: texto mais escuro sobre o fundo suave (contraste AA); no tema escuro, tinta escura sobre contador e marcador */
+:root{--good-tx:#277044;--warn-tx:#8A5F00;--serious-tx:#A03C15;--on-sev:#fff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--good-tx:var(--good);--warn-tx:var(--warn);--serious-tx:var(--serious);--on-sev:#10122A}}
+:root[data-theme="dark"]{--good-tx:var(--good);--warn-tx:var(--warn);--serious-tx:var(--serious);--on-sev:#10122A}
+.z-exc,.z-qua,.mat-3,.st-ok,.hist-grid .z-exc,.hist-grid .z-qua{color:var(--good-tx)}
+.z-ape,.sev-aten,.sim,.badge.warn,.mat-2,.st-sin,.hist-grid .z-ape{color:var(--warn-tx)}
+.z-cri,.sev-alto,.mat-1,.hist-grid .z-cri{color:var(--serious-tx)}
+.nav .cnt,.pin{color:var(--on-sev)}
+.pin.tmp{color:var(--accent-ink)}
 </style>
 <div class="band"></div>
 <div class="shell">
