@@ -30,7 +30,7 @@ Objetivo: receber os dados do Recife Monitora sem tocar na plataforma atual e en
 | ID | User story | Critérios de aceite | RF | Pri. | Pts | Status |
 |---|---|---|---|---|---|---|
 | US08 | Como Renata, quero um resumo do quadrimestre com ranking, maiores quedas e ganhos, equipes em zona crítica e causas de perda por eixo, para preparar a devolutiva aos distritos. | Uma versão por nível de gestão; causas de perda em pontos ponderados pelo grupo; anexa o log de qualidade. | RF05 | M | 8 | Feito (tela); exportação em PDF a fazer |
-| US09 | Como Ana Lúcia, quero exportar o resumo em PDF, para anexar ao SEI e enviar às unidades. | Botão de exportação; PDF com aviso de dados simulados enquanto a base for sintética. | RF05 | M | 3 | A fazer |
+| US09 | Como Ana Lúcia, quero exportar o resumo em PDF, para anexar ao SEI e enviar às unidades. | Botão de exportação; PDF com aviso de dados simulados enquanto a base for sintética. | RF05 | M | 3 | Feito (Protótipo 8, impressão do navegador) |
 
 ## E4. Alertas de priorização
 
@@ -65,17 +65,31 @@ Origem: feedback do cliente sobre o Protótipo 6.
 | US19 | Como Renata, quero registrar feedback e marcar um ponto da tela, inclusive nas respostas da IA, para a equipe RASTRE.IA saber exatamente o que ajustar. | Botão em todas as telas; tipo e texto; marcação opcional exibida sobre a tela; 👍/👎 e comentário por resposta do assistente; situação do feedback. | RNF05 | S | 5 | Feito (Protótipo 7) |
 | US20 | Como equipe RASTRE.IA, queremos medir o uso do app (telas, tempo, cliques, perguntas) num painel interno, para priorizar a próxima versão. | Registro de telas, tempo por tela, cliques, perguntas e envios; painel interno com período; exportação; registro desligável. Em produção, gravação na API interna com trilha de auditoria. | RNF05 | S | 8 | Em andamento (painel no Protótipo 7; dados por navegador até existir a API) |
 
+## E8. Revisão de design e UX (16/11/2026)
+
+Origem: revisão de design e UX do Protótipo 7, aprovada pelo cliente.
+
+| ID | User story | Critérios de aceite | RF | Pri. | Pts | Status |
+|---|---|---|---|---|---|---|
+| US21 | Como Ana Lúcia, quero ver juntos os alertas da mesma equipe e marcar uma visita única para todos, para não agendar duas visitas no mesmo lugar. | Grupo por equipe com severidade mais alta, contagem e próxima visita; visita única grava data e responsável em todos os alertas abertos; opção de lista simples; aviso de visita já marcada na janela de acompanhamento. | RF06 | S | 5 | Feito (Protótipo 8) |
+| US22 | Como Ana Lúcia, quero registrar o que resolveu um alerta ao tratá-lo, para ter histórico na devolutiva. | Pergunta ao tratar, com respostas prontas e texto livre; nota no alerta, no histórico e no CSV; tratar sem nota permitido. | RF06 | S | 2 | Feito (Protótipo 8) |
+| US23 | Como Ana Lúcia, quero uma agenda das visitas técnicas por semana, para planejar os deslocamentos. | Uma visita por equipe e data; atrasadas, esta semana, próxima semana e depois; aviso de críticos sem visita; exportação `.ics`. | RF06 | S | 5 | Feito (Protótipo 8) |
+| US24 | Como Renata, quero buscar e filtrar os planos de ação por maturidade, ciclo e distrito, para achar os que precisam de reformulação. | Cartões de contagem que filtram; busca por equipe, unidade ou texto; filtro de ciclo e distrito; paginação; CSV do filtro. | RF08 | S | 3 | Feito (Protótipo 8) |
+| US25 | Como Carlos Eduardo, quero ver no topo da página da equipe a situação, a maior perda e a próxima ação, para entender o essencial sem rolar a página. | Resumo com três blocos; atalhos para as seções; botão para o acompanhamento do alerta aberto. | RF04 | S | 3 | Feito (Protótipo 8) |
+| US26 | Como qualquer usuário, quero cabeçalho enxuto, texto legível, uso por teclado e orientação na primeira visita, para usar o RASTRE.IA sem treinamento. | Selo das faixas ao lado do título; contraste AA em texto cinza e links; alertas e tabelas por Tab e Enter; boas-vindas por perfil; perguntas sugeridas em uma linha. | RNF05 | S | 5 | Feito (Protótipo 8; contraste dos botões principais pendente) |
+
 ## Resumo
 
 | Épico | Stories | Pontos | Feito | Em andamento | A fazer |
 |---|---|---|---|---|---|
 | E1 Ingestão e saneamento | 4 | 26 | 1 | 1 | 2 |
 | E2 Pontuação e tendências | 3 | 11 | 3 | 0 | 0 |
-| E3 Resumo do quadrimestre | 2 | 11 | 1 | 0 | 1 |
+| E3 Resumo do quadrimestre | 2 | 11 | 2 | 0 | 0 |
 | E4 Alertas | 3 | 18 | 1 | 0 | 2 |
 | E5 Recomendações | 2 | 16 | 1 | 1 | 0 |
 | E6 Assistente | 2 | 26 | 0 | 1 | 1 |
 | E7 Feedback do cliente | 4 | 26 | 3 | 1 | 0 |
-| Total | 20 | 134 | 10 | 4 | 6 |
+| E8 Revisão de design e UX | 6 | 23 | 6 | 0 | 0 |
+| Total | 26 | 157 | 17 | 4 | 5 |
 
 Ordem para o SR2: US09, US11, US14, US03, US15. Quadro no Trello espelha este arquivo (uma lista por épico, um cartão por story).

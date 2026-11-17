@@ -1,6 +1,6 @@
 # MVP / protótipos RASTRE.IA
 
-Sete versões do protótipo; a versão atual é o **Protótipo 7** (`mvp7.html`). Cada uma é um único arquivo HTML (CSS e JS embutidos; a única
+Oito versões do protótipo; a versão atual é o **Protótipo 8** (`mvp8.html`). Cada uma é um único arquivo HTML (CSS e JS embutidos; a única
 dependência externa é a fonte do Google Fonts, opcional). Publicados em
 `s3://ratreia/mvpN/index.html` (us-east-1, leitura pública) e versionados aqui.
 
@@ -13,7 +13,24 @@ dependência externa é a fonte do Google Fonts, opcional). Publicados em
 | `mvp5.html` | Protótipo 5 (apresentado no SR1, 24/09) | base comum, pipeline v1.1 (realinhado ao Manual) | 900/800/600/400 e A40/B80/C80 (Manual) |
 | `mvp6.html` | Protótipo 6 (15/10) | base comum, `preparar_dados.py --pacote v6`: os dois conjuntos de parâmetros no mesmo pacote | Manual por padrão; Dicionário em Configurações ou `?faixas=dicionario` |
 
-| **`mvp7.html`** | **Protótipo 7 (atual, 16/11)** | mesmo pacote do Protótipo 6 (`--pacote v6`) | idem |
+| `mvp7.html` | Protótipo 7 (16/11) | mesmo pacote do Protótipo 6 (`--pacote v6`) | idem |
+| **`mvp8.html`** | **Protótipo 8 (atual, 16/11)** | mesmo pacote do Protótipo 6 (`--pacote v6`) | idem |
+
+## Protótipo 8: revisão de design e UX
+
+Feito sobre o Protótipo 7, com o mesmo pacote de dados (`embutir_dados.py --verificar` dá "iguais") e a mesma persistência (`rastreia.v7` no `localStorage`, então o que foi registrado no Protótipo 7 continua visível).
+
+- Alertas agrupados por equipe: os alertas da mesma equipe aparecem juntos, com a severidade mais alta, a contagem e a próxima visita no cabeçalho do grupo. "Agendar visita única" grava a mesma data e o mesmo responsável em todos os alertas abertos da equipe. A caixa "Agrupar por equipe" volta à lista simples. Na janela de acompanhamento, se outro alerta da equipe já tem visita, aparece o atalho "Usar a mesma data".
+- Nota de resolução: "Marcar como tratado" (no menu do alerta ou na janela de acompanhamento) pergunta o que resolveu, com respostas prontas e texto livre; a nota aparece no alerta tratado, no histórico e na coluna `resolucao` do CSV. "Tratar sem nota" continua disponível.
+- Agenda de visitas: alternador Lista/Agenda na tela de Alertas. A agenda mostra uma visita por equipe e data, em Atrasadas, Esta semana, Próxima semana e Depois, avisa quantas equipes com alerta crítico ainda não têm visita e exporta as visitas em `.ics` (Outlook, Google Agenda, celular).
+- Cabeçalho: a linha "Faixas do Manual: ... · trocar", que se repetia abaixo do título, virou um selo ao lado do título (o texto completo fica na dica do selo; o clique leva a Configurações). No celular, os filtros do cabeçalho rolam na horizontal em vez de quebrar em várias linhas.
+- Página da equipe: resumo no topo com situação, maior perda e próxima ação (o alerta aberto mais urgente ou a primeira recomendação) e atalhos para Evolução, Eixos, Recomendações e Planos de ação.
+- Planos de ação: cartões Todos, Reformulação, Ajustes, Aprovados e Sem texto que filtram a lista; busca por equipe, unidade ou trecho do plano; filtro de ciclo (e de distrito no perfil central); lista em páginas de 20; o CSV exporta o filtro atual.
+- Resumo do quadrimestre: "Exportar PDF" abre a impressão do navegador com folha de estilo própria (A4, sem menu nem botões, tema claro, ranking completo). Atende à US09 sem servidor; o envio por e-mail segue simulado.
+- Assistente: depois da primeira pergunta, as perguntas sugeridas ficam em uma linha com rolagem lateral (no celular, sempre). Ícones no lugar dos emojis de avaliação e de privacidade.
+- Acessibilidade: texto cinza e links pequenos com contraste AA (4,5:1 ou mais nos temas claro e escuro); alertas e linhas de tabela alcançáveis por Tab e abertos com Enter; foco visível. Pendente: o texto branco sobre o azul dos botões principais tem contraste 3,7:1, abaixo do AA para texto pequeno; mudar exige decisão sobre a cor da marca.
+- Primeira visita: cartão de boas-vindas no Painel, por perfil, com o número de alertas pendentes e atalhos; dica dispensável na tela de Alertas; estados vazios com orientação.
+- Correções: variação de pontos nos títulos dos alertas com vírgula decimal; espaço no fim da página para o botão Feedback não cobrir conteúdo.
 
 ## Protótipo 7: feedback do cliente
 
@@ -38,7 +55,7 @@ Feito sobre o Protótipo 6, com o mesmo pacote de dados (`embutir_dados.py --ver
 - Nova tela Análise exploratória (perfis central e distrital): medidas de posição e dispersão, completude da base crua e gráficos interativos. Histograma com escolha da variável e da largura da faixa (clique na barra lista as equipes); boxplot por distrito, grupo ou tipo de equipe (clique na caixa lista as equipes, outliers abrem a equipe); dispersão com eixos à escolha, linha de tendência e zonas que se escondem pela legenda. Dica com os valores ao passar o mouse. Cada análise tem o botão "Interpretar com IA", que escreve o que se pode inferir e o próximo passo a partir das estatísticas do recorte e dos filtros em uso (gerado no próprio navegador, sem IA externa, como o Assistente).
 - Comparações com limiares sem arredondamento; cartão de quedas compara com o ciclo anterior.
 
-`mvp3` a `mvp7` trazem o aviso "DADOS SIMULADOS", perfis de acesso (central, distrital,
+`mvp3` a `mvp8` trazem o aviso "DADOS SIMULADOS", perfis de acesso (central, distrital,
 local), alertas, planos de ação, resumo do quadrimestre, assistente e a tela "Qualidade dos
 dados" (perfis central e distrital).
 
@@ -56,10 +73,11 @@ python3 -m http.server 8080 --directory app
 ```bash
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida
 python pipeline/embutir_dados.py --html app/mvp5.html --dados data/saida/rastreia_data.json --verificar   # imprime "iguais"
-# Protótipos 6 e 7 (atual): pacote com os dois modos
+# Protótipos 6, 7 e 8 (atual): pacote com os dois modos
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida --pacote v6
 python pipeline/embutir_dados.py --html app/mvp6.html --dados data/saida/rastreia_data_v6.json --verificar   # "iguais"
 python pipeline/embutir_dados.py --html app/mvp7.html --dados data/saida/rastreia_data_v6.json --verificar   # "iguais"
+python pipeline/embutir_dados.py --html app/mvp8.html --dados data/saida/rastreia_data_v6.json --verificar   # "iguais"
 # Protótipos 3 e 4 (pipeline v1.0, parâmetros do dicionário)
 python pipeline/preparar_dados.py --entrada data/entrada --saida data/saida-dicionario --modo dicionario
 python pipeline/embutir_dados.py --html app/mvp3.html --dados data/saida-dicionario/rastreia_data.json --verificar   # "iguais"
